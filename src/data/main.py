@@ -4,6 +4,11 @@ main.py
 Ce script permet de télécharger le jeu de données depuis sa source publique puis de créer les jeux de données depuis les métadonnées des images.
 '''
 
+import os
+import pandas as pd
+import re
+from PIL import Image
+
 # Téléchargement depuis le dépôt des données de Kaggle (nécessite des condentials)
 od.download("https://www.kaggle.com/datasets/tawsifurrahman/covid19-radiography-database")
 

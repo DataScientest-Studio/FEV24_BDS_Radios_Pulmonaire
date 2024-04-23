@@ -4,6 +4,9 @@ pieplot_SOURCE.py
 Ce script permet d'afficher un pieplot montrant la proportion de chaque source dans le jeu de données.
 '''
 
+import seaborn as sns
+import matplotlib.pyplot as plt
+
 source_counts = df_images['SOURCE'].value_counts()
 
 sns.set_style("whitegrid")

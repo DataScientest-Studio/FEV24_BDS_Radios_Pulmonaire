@@ -4,6 +4,9 @@ countplot_LABEL.py
 Ce script permet d'afficher un countplot du nombre d'images par LABEL.
 '''
 
+import seaborn as sns
+import matplotlib.pyplot as plt
+
 ax = sns.countplot(x = 'LABEL',
                    data = df_images,
                    order = df_images['LABEL'].value_counts().index,

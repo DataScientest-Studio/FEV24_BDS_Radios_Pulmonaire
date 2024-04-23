@@ -4,6 +4,9 @@ show_img_samples.py
 Ce script permet d'afficher aléatoirement 5 images de chaque classe du jeu de données.
 '''
 
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+
 def sample_paths(group):
     return group.sample(n = 5)
 

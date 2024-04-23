@@ -5,12 +5,10 @@ Ce script définit une fonction pour le preprocessing des images.
 La fonction renvoie un ensemble d'entrainement et un ensemble de test.
 '''
 
-from PIL import Image
 import numpy as np
-import cv2
-import pandas as pd
+from PIL import Image
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+from sklearn.preprocessing import LabelEncoder, to_categorical
 
 def preproc_img(df_images, df_masks, n_img, normalize, files_path, resolution, with_masks):
     np.random.seed(42)

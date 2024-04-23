@@ -4,6 +4,11 @@ violinplot_light_intensity.py
 Ce script permet d'afficher violinplot présentant la répartition de l'intensité lumineuse des images de chaque LABEL.
 '''
 
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+import matplotlib.image as mpimg
+
 # Fonction pour calculer l'intensité lumineuse moyenne d'une image
 def calc_mean_intensity(image_path):
     img = mpimg.imread(image_path)

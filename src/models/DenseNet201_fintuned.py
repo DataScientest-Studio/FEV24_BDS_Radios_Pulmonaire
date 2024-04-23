@@ -4,6 +4,15 @@ DenseNet201_fintuned.py
 Ce script permet de construire le modèle DenseNet201 avec ses paramétrages fins.
 '''
 
+from tensorflow.keras.applications import DenseNet201
+from tensorflow.keras.layers import GlobalAveragePooling2D, Dense, BatchNormalization, Dropout
+from tensorflow.keras.models import Model
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.losses import categorical_crossentropy
+from tensorflow.keras.metrics import Precision, Recall, AUC, F1Score
+from tensorflow.keras.regularizers import l2
+from tensorflow.keras.callbacks import EarlyStopping
+
 # Construction du modèle
 densenet = DenseNet201(weights = 'imagenet', include_top = False, input_shape = (224, 224, 3))
 

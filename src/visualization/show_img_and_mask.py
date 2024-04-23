@@ -4,6 +4,9 @@ show_img_and_mask.py
 Ce script permet d'afficher une image et son masque.
 '''
 
+import cv2
+import matplotlib.pyplot as plt
+
 # Saisir les chemins de l'image et du masque souhaitées
 img = cv2.imread("")
 mask = cv2.imread("")
