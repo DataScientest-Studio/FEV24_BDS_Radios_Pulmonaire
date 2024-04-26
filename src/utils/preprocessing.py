@@ -49,7 +49,7 @@ def preproc_img(df_images, df_masks, n_img, normalize, files_path, resolution, w
         img_resized = img.resize((resolution[0], resolution[1]))
 
         # Normalisation des valeurs des pixels
-        if normalize == 'imagenet'
+        if normalize == 'imagenet':
             if resolution[2] == 1:  # Image en nuances de gris
                 mean_gray = np.mean([0.485, 0.456, 0.406])
                 std_gray = np.mean([0.229, 0.224, 0.225])
