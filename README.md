@@ -2,7 +2,7 @@
 
 ## Présentation
 
-Ce répertoire contient le code de notre projet de classification de radiographies pulmonaires développé pendant notre [formation de Data Scientist](https://datascientest.com/en/data-scientist-course) aavec [DataScientest](https://datascientest.com/).
+Ce répertoire contient le code de notre projet de classification de radiographies pulmonaires développé pendant notre [formation de Data Scientist](https://datascientest.com/en/data-scientist-course) avec [DataScientest](https://datascientest.com/).
 
 L’objectif principal de ce projet est de développer un système d’analyse automatisée de radiographies pulmonaires pour la détection efficace du COVID-19 sur moins de deux mois en parallèle de notre formation. 
 En utilisant les techniques de Deep Learning, nous cherchons à créer un modèle de classification capable de distinguer avec précision les radiographies de patients atteints de COVID-19 de celles présentant d’autres affections pulmonaires ou étant saines. Les objectifs spécifiques incluent l’acquisition et la préparation d’un ensemble de données diversifié et annoté, la conception et l'entraînement d’un modèle de Deep Learning robuste, ainsi que l’évaluation rigoureuse de ses performances en termes de sensibilité, de spécificité et de précision.
