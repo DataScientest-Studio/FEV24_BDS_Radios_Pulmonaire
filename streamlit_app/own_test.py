@@ -1,10 +1,18 @@
 import streamlit as st
 from PIL import Image, ImageOps
 import tensorflow as tf
+import keras
 import os
 import numpy as np
 import pandas as pd
 import time
+import cv2
+os.environ["KERAS_BACKEND"] = "tensorflow"
+
+from custom_functions import make_gradcam_heatmap, save_and_display_gradcam
+from keras.layers import Conv2D
+from tensorflow.keras.preprocessing.image import img_to_array, array_to_img
+from keras.models import load_model
 
 model_densenet = tf.keras.models.load_model("models\DenseNet201_finetuned.h5")
 model_vgg = tf.keras.models.load_model("models\VGG16_finetuned.h5")
@@ -12,7 +20,6 @@ model = None
 
 def show_test():
     st.header("Réaliser des prédictions")
-
     # Configuration initiale de l'état de session
     if 'model_selected' not in st.session_state:
         st.session_state.model_selected = None
@@ -66,13 +73,12 @@ def show_test():
             st.write('')
             st.write('')
             original = Image.open(uploaded_file)
-            my_bar = st.progress(0, text = "Calculs en cours...")
-            for percent_complete in range(100):
-                time.sleep(0.05)
-                my_bar.progress(percent_complete + 1, text = "Calculs en cours...")
-            time.sleep(1)
-            my_bar.empty()
-            st.success("👏 Prédictions réalisées avec succès !")       
+            bar_progress = 0
+            my_bar = st.progress(bar_progress, text = "Ouverture de l'image...")
+            time.sleep(0.5)
+            bar_progress = 10
+            my_bar.progress(bar_progress, text = "Réalisation du preprocessing...")
+            st.success("👏 Prédictions réalisées avec succès !") if bar_progress == 100 else None       
     
     st.header("", divider = 'gray')
 
@@ -88,8 +94,21 @@ def show_test():
         img_normalized -= np.array([0.485, 0.456, 0.406])  # Soustraction de la moyenne par canal
         img_normalized /= np.array([0.229, 0.224, 0.225])  # Division par l'écart-type par canal
         img_normalized = img_normalized.reshape(-1, 224, 224, 3)  # Remodeler pour correspondre aux attentes du modèle (batch_size, height, width, channels)
+        bar_progress = 30
+        my_bar.progress(bar_progress, text = "Calcul des prédictions...")
+        time.sleep(0.5)
+        predictions = model.predict(img_normalized)
+        bar_progress = 70
+        my_bar.progress(bar_progress, text = "Affichage de la GRAD-CAM...")
+        time.sleep(0.5)
 
-        col1, col2 = st.columns([0.3, 0.7])
+        col1, col2, col3 = st.columns([0.3, 0.4, 0.3])
+
+        def normalize_display_image(img_normalized):
+            img_display = (img_normalized * np.array([0.229, 0.224, 0.225])) + np.array([0.485, 0.456, 0.406])
+            img_display = np.clip(img_display, 0, 1)
+            img_display = (img_display * 255).astype(np.uint8)
+            return img_display
 
         if original.width > 500:
             width = 500
@@ -97,16 +116,37 @@ def show_test():
             width = original.width
 
         with col1:
-            st.header("Image originale")
+            st.subheader("Image originale")
             st.image(original, use_column_width = False, width = width, clamp = True)
             st.warning("Image redimensionnée pour des raisons d'affichage.", icon = "⚠️") if original.width > 500 else None
+
         with col2:
-            st.header("Image traitée")
+            st.subheader("Image traitée")
             st.image(img_normalized, use_column_width = False, clamp = True)
+
+        with col3:
+            st.subheader("GRAD-CAM")
+            # Préparation de l'image pour GRAD-CAM sans dimension de batch
+            heatm_img = np.squeeze(img_normalized)
+
+            last_conv_layer_name = None
+            for layer in reversed(model.layers):
+                if isinstance(layer, keras.layers.Conv2D):  # Assure-toi que c'est bien keras.layers.Conv2D
+                    last_conv_layer_name = layer.name
+                    break
+
+            # Générer la heatmap à partir du modèle et de l'image traitée
+            heatmap = make_gradcam_heatmap(np.expand_dims(heatm_img, axis = 0), model, last_conv_layer_name)
+
+            # Préparation de l'image pour l'affichage de la superposition GRAD-CAM
+            img_display = normalize_display_image(heatm_img)  # Convertir l'image normalisée en image affichable
+            grad_img = save_and_display_gradcam(img_display, heatmap)  # Utilise l'image affichable ici
+            bar_progress = 100
+            my_bar.progress(bar_progress, text = "Exécution terminée")
+            time.sleep(0.5)
+            st.image(grad_img, use_column_width=False, clamp=True)
         
         st.header("", divider = 'gray')
-
-        predictions = model.predict(img_normalized)
 
         class_names = {0 : 'COVID',
                        1 : 'Lung_Opacity',
