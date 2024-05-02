@@ -3,6 +3,7 @@ import pandas as pd
 import pickle
 import numpy as np
 import plotly.graph_objects as go
+import plotly.figure_factory as ff
 from custom_functions import plot_auc, plot_f1_score, plot_loss_curve , plot_precision_curve
 from custom_functions import plot_CM_ConvnextBase, plot_CM_ConvnextTiny, plot_CM_DenseNet201, plot_CM_DenseNetFT, plot_CM_EfficientNet_B4, plot_CM_ENetB4, plot_CM_ResNet121, plot_CM_ResNetFT, plot_CM_ResNetV2,plot_CM_VGG16,plot_CM_VGG16_FT,plot_CM_VGG19
 
