@@ -6,8 +6,8 @@ import numpy as np
 import pandas as pd
 import time
 
-model_densenet = tf.keras.models.load_model(r"C:\Users\Gamy\Documents\GitHub\FEV24_BDS_Radios_Pulmonaire\models\DenseNet201_finetuned.h5")
-model_vgg = tf.keras.models.load_model(r"C:\Users\Gamy\Documents\GitHub\FEV24_BDS_Radios_Pulmonaire\models\VGG16_finetuned.h5")
+model_densenet = tf.keras.models.load_model("models\DenseNet201_finetuned.h5")
+model_vgg = tf.keras.models.load_model("models\VGG16_finetuned.h5")
 model = None
 
 def show_test():

@@ -12,9 +12,9 @@ import plotly.graph_objects as go
 from PIL import Image
 from custom_functions import calc_mean_intensity, source_extract
 
-df_images = pd.read_csv(r'data\df_images.csv')
-df_masks = pd.read_csv(r'data\df_masks.csv')
-df_combined = pd.read_csv(r'data\df_combined.csv')
+df_images = pd.read_csv('data\df_images.csv')
+df_masks = pd.read_csv('data\df_masks.csv')
+df_combined = pd.read_csv('data\df_combined.csv')
 
 def show_exploration():
     # Style des onglets

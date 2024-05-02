@@ -66,7 +66,7 @@ with col1:
     show_profile(name = "Alexandre LANGLAIS", linkedin_url = "https://www.linkedin.com/in/alexlanglais/", github_url = "https://github.com/a-langlais")
     show_profile(name = "Chaouki BENZEKRI", github_url = "https://github.com/ChaoukiBenzekri/", linkedin_url = "https://www.linkedin.com/in/chaouki-benzekri-3b0b57136/")
     show_profile(name = "Camille RUBI", github_url = "https://github.com/Rubicamille", linkedin_url = "https://www.linkedin.com/in/camille-rubi/")
-    show_profile(name = "Pierre-Jean CORNEJO", github_url = "https://github.com/PJCornejo", linkedin_url = "http://www.linkedin.com/in/gael-penessot/")
+    show_profile(name = "Pierre-Jean CORNEJO", github_url = "https://github.com/PJCornejo", linkedin_url = "http://www.linkedin.com/in/pjCornejo/")
 
 with col2:
     logo_dst = Image.open('images/logo_dst.jpg')
