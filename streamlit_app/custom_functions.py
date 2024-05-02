@@ -6,6 +6,7 @@ import cv2
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import plotly.graph_objects as go
+import plotly.figure_factory as ff
 import tensorflow as tf
 import keras
 
@@ -189,6 +190,19 @@ def plot_f1_score(history):
     st.plotly_chart(fig)
 
 # Plot des matrices de confusion
+def plot_CM(matrix):
+    confusion_matrix = np.array(matrix)
+    class_names = ['Covid', 'Lung opacity', 'Normal', 'Viral Pneumonia']
+    st.title('Matrice de Confusion')
+    fig = ff.create_annotated_heatmap(z = confusion_matrix, x = class_names, y = class_names, colorscale = 'RdBu')
+    fig.update_layout(
+        title = 'Matrice de Confusion',
+        xaxis = dict(title = 'Classe Prédite'),
+        yaxis = dict(title = 'Classe Réelle')
+    )
+    st.plotly_chart(fig)
+
+
 def plot_CM_ResNetV2():
     confusion_lines = [
         [192, 3, 7, 2],
