@@ -79,8 +79,6 @@ def show_test():
             bar_progress = 10
             my_bar.progress(bar_progress, text = "Réalisation du preprocessing...")
     
-    st.header("", divider = 'gray')
-
     if (uploaded_file is not None) and (st.session_state.model_selected is not None):
         # Ouvrir l'image téléchargée
         original = Image.open(uploaded_file)        
@@ -92,7 +90,8 @@ def show_test():
         img_normalized = np.array(resized) / 255.0  # Convertir l'image en array et normaliser entre 0 et 1
         img_normalized -= np.array([0.485, 0.456, 0.406])  # Soustraction de la moyenne par canal
         img_normalized /= np.array([0.229, 0.224, 0.225])  # Division par l'écart-type par canal
-        img_normalized = img_normalized.reshape(-1, 224, 224, 3)  # Remodeler pour correspondre aux attentes du modèle (batch_size, height, width, channels)
+        img_normalized = img_normalized.reshape(-1, 224, 224, 3)  # Remodeler pour correspondre aux attentes du modèle (batch_size, height, width, channels
+        
         bar_progress = 30
         my_bar.progress(bar_progress, text = "Estimation des prédictions...")
         time.sleep(0.5)
@@ -100,7 +99,7 @@ def show_test():
         bar_progress = 70
         my_bar.progress(bar_progress, text = "Génération de la GRAD-CAM...")
         time.sleep(0.5)
-
+            
         col1, col2, col3 = st.columns([0.3, 0.4, 0.3])
 
         def normalize_display_image(img_normalized):
@@ -145,12 +144,10 @@ def show_test():
             time.sleep(0.5)
             st.image(grad_img, use_column_width=False, clamp=True)
         
-        st.header("", divider = 'gray')
-
         class_names = {0 : 'COVID',
-                       1 : 'Lung_Opacity',
-                       2 : 'Normal',
-                       3 : 'Viral Pneumonia'}
+                    1 : 'Lung_Opacity',
+                    2 : 'Normal',
+                    3 : 'Viral Pneumonia'}
         df_predictions = pd.DataFrame(predictions)
         df_predictions = df_predictions.rename(columns = class_names)
         df_predictions_sorted = df_predictions.sort_values(by = 0, axis = 1, ascending = False)

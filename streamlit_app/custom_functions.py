@@ -202,7 +202,6 @@ def plot_CM(matrix):
     )
     st.plotly_chart(fig)
 
-
 def plot_CM_ResNetV2():
     confusion_lines = [
         [192, 3, 7, 2],
