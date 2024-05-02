@@ -4,6 +4,7 @@ import pickle
 import numpy as np
 import plotly.graph_objects as go
 from custom_functions import plot_auc, plot_f1_score, plot_loss_curve , plot_precision_curve
+from custom_functions import plot_CM_ConvnextBase, plot_CM_ConvnextTiny, plot_CM_DenseNet201, plot_CM_DenseNetFT, plot_CM_EfficientNet_B4, plot_CM_ENetB4, plot_CM_ResNet121, plot_CM_ResNetFT, plot_CM_ResNetV2,plot_CM_VGG16,plot_CM_VGG16_FT,plot_CM_VGG19
 
 with open("models\history_DenseNet201.pkl", "rb") as file1:
     history_densenet = pickle.load(file1)
@@ -366,6 +367,19 @@ def show_fine_tuning():
                         "VGG16_ft" :""" Le modèle a donc été entraîné avec ces paramètres ce qui nous permet d’améliorer encore l’efficacité du modèle par rapport à ce que nous avions obtenu sans finetuning. Les classes les mieux prédites sont COVID et Viral (Viral pneumonia), suivies par les classes Lung Opacity et Normal. De façon intéressante , toutes nos métriques sont au-dessus de 90% et suite à l'entraînement du modèle avec les meilleurs paramètres nous obtenons une accuracy globale de 95%. __Ce modèle semble donc capable de fournir des résultats plus qu’acceptables tout en ayant un coût computationnel très contenu.__""",
                         "DenseNet" :""" Le rapport de classification montre des valeurs élevées pour la précision, le rappel et le F1 Score pour chaque classe ce qui indique que le modèle est particulièrement performant dans la distinction entre les différentes conditions. A noter cependant qu’il performe tout particulièrement dans la distinction de la classe COVID et de la classe Viral Pneumonia mais est un peu moins efficace dans la détection des classes Normal et Lung_Opacity. Pour le COVID, le modèle a très bien performé, avec seulement 3 faux positifs et faux négatifs. Les résultats pour les autres conditions sont également bons, mais on note quelques erreurs, par exemple, 23 cas de Lung_Opacity ont été confondus avec la classe Normal. __Néanmoins, ces erreurs semblent être faibles en comparaison avec le nombre total de prédictions correctes.__"""}
 
+            CM_dico =  {"Modèles testés" :"",
+                        "InceptionResNetV2" :plot_CM_ResNetV2,
+                        "ResNet121V2" : plot_CM_ResNet121,
+                        "DenseNet201": plot_CM_DenseNet201,
+                        "VGG16" : plot_CM_VGG16, 
+                        "VGG19" : plot_CM_VGG19,
+                        "ConvNextTiny" : plot_CM_ConvnextTiny,
+                        "ConvNextBase" : plot_CM_ConvnextBase,
+                        "EfficientNet B4" :plot_CM_EfficientNet_B4,
+                        "EfficientNet" :plot_CM_ENetB4,
+                        "ResNet" :plot_CM_ResNetFT,
+                        "VGG16_ft" :plot_CM_VGG16_FT,
+                        "DenseNet" :plot_CM_DenseNetFT}
 
             df = pd.read_csv(csv_path_cr[Choice_cr])
             df= df.fillna("")
@@ -397,6 +411,8 @@ def show_fine_tuning():
     with col1:
         st.markdown(css_style, unsafe_allow_html=True)
         st.markdown(styled_html_table, unsafe_allow_html=True)
+        if Choice_cr != "Modèles testés":
+            CM_dico[Choice_cr]()
     
     with col2:
         st.markdown(comm_dico[Choice_cr])
