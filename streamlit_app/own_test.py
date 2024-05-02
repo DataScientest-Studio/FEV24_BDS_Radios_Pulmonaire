@@ -162,7 +162,7 @@ def show_test():
         probabilite_predite = np.max(predictions)
         probabilite_predite = "{:.4f}".format(probabilite_predite)
 
-        col1, col2 = st.columns([1, 1])
+        col1, col2, col3 = st.columns([0.3, 0.3, 0.4])
 
         with col1:
             # Afficher la classe prédite et sa probabilité
@@ -170,8 +170,36 @@ def show_test():
             st.write(table_html, unsafe_allow_html = True)
         
         with col2:
-            st.markdown(f"**Classe prédite** : {nom_classe_predite}")
-            st.markdown(f"**Probabilité** : {probabilite_predite}")
+            st.markdown(
+                f"""
+                <div style='border-radius: 5px; border: 2px solid #d6d6d6; padding: 10px; max-width: 400px; background-color: rgba(255, 255, 255, 0.2);'>
+                    <div style='display: flex; justify-content: space-around;'>
+                        <div>
+                            <p style='font-size: 20px; text-align: center; margin: 0;'>Classe prédite</p>
+                            <p style='font-size: 30px; text-align: center; margin: 0;'>{nom_classe_predite}</p>
+                        </div>
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+            st.write("")
+            percent_predit = float(probabilite_predite) * 100
+            st.markdown(
+                f"""
+                <div style='border-radius: 5px; border: 2px solid #d6d6d6; padding: 10px; max-width: 400px; background-color: rgba(255, 255, 255, 0.2);'>
+                    <div style='display: flex; justify-content: space-around;'>
+                        <div>
+                            <p style='font-size: 20px; text-align: center; margin: 0;'>Confiance de la prédiction</p>
+                            <p style='font-size: 30px; text-align: center; margin: 0;'>{percent_predit} %</p>
+                        </div>
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        with col3:
             if float(probabilite_predite) > 0.90:
                 st.markdown(f"Avec une probabilité de {probabilite_predite}, il est **certain** que cette radiographie illustre un cas {nom_classe_predite}. Attention cependant, cette prédiction est à prendre en compte seulement si l'image s'agit bien d'une radiographie conforme.")
             elif float(probabilite_predite) > 0.75:
