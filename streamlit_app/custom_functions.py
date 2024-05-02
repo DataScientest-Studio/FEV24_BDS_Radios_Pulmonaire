@@ -2,8 +2,16 @@ import streamlit as st
 import uuid
 import re
 import numpy as np
+import cv2
+import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import plotly.graph_objects as go
+import tensorflow as tf
+import keras
+
+from keras.layers import Conv2D
+from tensorflow.keras.preprocessing.image import img_to_array, array_to_img
+from keras.models import load_model
 
 # Afficher le nom et l'icone des réseaux d'un membre
 def show_profile(name, linkedin_url, github_url):
@@ -410,3 +418,45 @@ def plot_CM_ENetB4():
         yaxis=dict(title='Classe Réelle')
     )
     st.plotly_chart(fig)
+
+# GRAD-CAM
+def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None):
+    model_output = model.output if isinstance(model.output, list) else [model.output]
+    grad_model = tf.keras.models.Model(
+        inputs=model.inputs,
+        outputs=[model.get_layer(last_conv_layer_name).output] + model_output
+    )
+
+    with tf.GradientTape() as tape:
+        last_conv_layer_output, preds = grad_model(img_array)
+        if pred_index is None:
+            pred_index = tf.argmax(preds[0])
+        class_channel = preds[:, pred_index]
+
+    grads = tape.gradient(class_channel, last_conv_layer_output)
+
+    pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
+
+    last_conv_layer_output = last_conv_layer_output[0]
+    heatmap = last_conv_layer_output @ pooled_grads[..., tf.newaxis]
+    heatmap = tf.squeeze(heatmap)
+
+    heatmap = tf.maximum(heatmap, 0) / tf.math.reduce_max(heatmap)
+    return heatmap.numpy()
+
+def save_and_display_gradcam(img, heatmap, alpha=0.4):
+    heatmap = np.uint8(255 * heatmap)
+
+    jet = plt.cm.jet
+
+    jet_colors = jet(np.arange(256))[:, :3]
+    jet_heatmap = jet_colors[heatmap]
+
+    jet_heatmap = array_to_img(jet_heatmap)
+    jet_heatmap = jet_heatmap.resize((img.shape[1], img.shape[0]))
+    jet_heatmap = img_to_array(jet_heatmap)
+
+    superimposed_img = jet_heatmap * alpha + img
+    superimposed_img = array_to_img(superimposed_img)
+
+    return superimposed_img
