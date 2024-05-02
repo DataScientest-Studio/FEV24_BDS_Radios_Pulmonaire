@@ -130,7 +130,51 @@ def show_fine_tuning():
     
     ### Deuxième onglet
     with tab2:
-        st.markdown("Texte filler")
+            df = pd.read_csv(r"df_file\Lenet_nb_image.csv")
+            df2 = pd.read_csv(r"df_file\Lenet_nb_epoque.csv") 
+
+
+            col1, col2 = st.columns(2)
+
+            with col1 :
+
+                fig = go.Figure()
+
+                fig.add_trace(go.Scatter(x=df['nombre_images'], y=df['Precision max'], mode='lines+markers', name='Precision max', line=dict(color='lightblue')))
+                fig.add_trace(go.Scatter(x=df['nombre_images'], y=df['Precision max validation'], mode='lines+markers', name='Precision max validation', line=dict(color='salmon')))
+
+                fig.add_vline(x=1325, line=dict(color='red', width=1, dash='dash'))
+                fig.update_layout(title="Evolution de la précision max en fonction du nombre d'image",
+                                xaxis_title='Nombre d\'images',
+                                yaxis_title='Précision max',
+                                template='plotly_white',
+                                paper_bgcolor='rgba(0,0,0,0)',
+                                plot_bgcolor='rgba(0,0,0,0)',
+                                legend=dict(font=dict(color='white')),
+                                xaxis=dict(tickfont=dict(color='white')),
+                                yaxis=dict(tickfont=dict(color='white')),
+                                title_font=dict(color='white'))
+                st.plotly_chart(fig)
+
+            with col2: 
+
+                fig2 = go.Figure()
+
+                fig2.add_trace(go.Scatter(x=df2['Nombre epoque'], y=df2['Precision max'], mode='lines+markers', name='Precision max', line=dict(color='lightblue')))
+                fig2.add_trace(go.Scatter(x=df2['Nombre epoque'], y=df2['Precision max validation'], mode='lines+markers', name='Precision max validation', line=dict(color='salmon')))
+
+                fig2.update_layout(title="Evolution de la précision max en fonction du nombre d'époque",
+                                xaxis_title='Nombre d\'époque',
+                                yaxis_title='Précision max',
+                                template='plotly_white',
+                                paper_bgcolor='rgba(0,0,0,0)',
+                                plot_bgcolor='rgba(0,0,0,0)',
+                                legend=dict(font=dict(color='white')),
+                                xaxis=dict(tickfont=dict(color='white')),
+                                yaxis=dict(tickfont=dict(color='white')),
+                                title_font=dict(color='white'))
+
+                st.plotly_chart(fig2)
 
     ### Troisième onglet
     with tab3:
