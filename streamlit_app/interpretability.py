@@ -78,3 +78,24 @@ def show_interpretability():
 
     with tab2:
         st.header("Analyse de la GRAD-CAM")
+
+        col1, col2 = st.columns([0.6, 0.4])
+
+        with col1:
+            st.markdown('''
+            Le GRAD-CAM est une technique de visualisation : elle est utile pour comprendre quelles parties d'une image donnée ont conduit un réseau de neurones convolutifs à sa décision finale de classification.
+
+            Elle est utile pour déboguer le processus de décision d'un algorithme, en particulier dans le cas d'une erreur de classification.
+
+            Cette technique provient d'une catégorie plus générale de procédés appelée visualisation de __Class Activation Map__ (CAM).
+
+            Elle consiste à produire des heatmaps représentant les classes d'activation sur les images d'entrée. Une __class activation heatmap__ est associée à une classe de sortie spécifique.
+
+            Ces classes sont calculées pour chaque pixel d'une image d'entrée, indiquant l'importance de chaque pixel par rapport à la classe considérée.
+
+            Par exemple, si une image est utilisée dans un convnet chiens/chats, la visualisation CAM permet de générer une carte thermique pour la classe « chat », indiquant à quel point les différentes parties de l'image ressemblent à un chat, et également une carte thermique pour la classe « chien », indiquant à quel point les parties de l'image ressemblent à un chien.
+                        ''')
+
+        with col2:
+            gradcam = Image.open('images\illustration_gradcam.jpeg')
+            st.image(gradcam, use_column_width = True, caption = "Illustration de la __feature-map__ sur une image de chien")
