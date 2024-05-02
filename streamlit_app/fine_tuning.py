@@ -133,45 +133,57 @@ def show_fine_tuning():
 
     ### Troisième onglet
     with tab3:
-        st.header("Modèles testés")
-        
-        col1, col2 = st.columns([1, 1])
-        
-        with col1:
-            accuracy = history_densenet['precision']
-            val_accuracy = history_densenet['val_precision']
-            epochs = list(range(1, len(accuracy) + 1))
+            Slider = st.select_slider(" ", options = ["Transfer learning" , "Fine Tuning"])
 
-            fig = go.Figure()
-            fig.add_trace(go.Scatter(x = epochs, y = accuracy, mode = 'lines+markers', name = 'Accuracy', line = dict(color = 'lightblue')))
-            fig.add_trace(go.Scatter(x = epochs, y = val_accuracy, mode = 'lines+markers', name = 'Validation Accuracy', line = dict(color = 'salmon')))
+            categorie = {"Transfer learning" :["Modèles testés","InceptionResNetV2","ResNet121V2","DenseNet201","VGG16", "VGG19","ConvNextTiny","ConvNextBase","EfficientNet B4"],
+                        "Fine Tuning" : ["EfficientNet", "ResNet", "VGG16_ft" ,"DenseNet"]}
 
-            fig.update_layout(
-                title='Courbes de précision pour DenseNet201',
-                xaxis_title='Epoques',
-                yaxis_title='Précision',
-                legend_title='Type de données'
-            )
+            Choice_cr = st.selectbox("Navigation",
+                                    options = categorie[Slider])
+            
+            csv_path_cr = {"Modèles testés" :r"df_file\df test model.csv",
+                        "InceptionResNetV2" :r"df_file\df InceptionRes.csv",
+                        "ResNet121V2" : r"df_file\df Res.csv",
+                        "DenseNet201": r"df_file\df densenet.csv",
+                        "VGG16" : r"df_file\df VGG16.csv", 
+                        "VGG19" : r"df_file\df VGG19.csv",
+                        "ConvNextTiny" : r"df_file\df Convtiny.csv",
+                        "ConvNextBase" : r"df_file\df Convbase.csv",
+                        "EfficientNet B4" :r"df_file\df efficient.csv",
+                        "EfficientNet" :r"df_file\df efficientnet finetuned.csv",
+                        "ResNet" :r"df_file\df resnet finetuned.csv",
+                        "VGG16_ft" :r"df_file\df VGG16_finetuned.csv",
+                        "DenseNet" :r"df_file\df densenet_finetuned.csv"}
+            
+            df = pd.read_csv(csv_path_cr[Choice_cr])
+            df= df.fillna("")
 
-            st.plotly_chart(fig)
+            # Convertir le dataframe en HTML avec les styles CSS
+            html_table = df.to_html(index=False, justify='center', classes='styled-table')
 
-        with col2:
-            accuracy = history_vgg['accuracy']
-            val_accuracy = history_vgg['val_accuracy']
-            epochs = list(range(1, len(accuracy) + 1))
+            # Définir le style CSS pour centrer l'affichage du DataFrame et le fond
+            css_style = """
+            <style>
+                .background-div {
+                    max-width: fit-content; /* Largeur adaptée au contenu */
+                    margin: 0 auto; /* Centrer horizontalement */
+                    padding: 10px;
+                    background-color: #343434;
+                    border-radius: 5px;
+                }
+                .inner-div {
+                    text-align: center; /* Centrer le contenu */
+                }
+            </style>
+            """
 
-            fig = go.Figure()
-            fig.add_trace(go.Scatter(x = epochs, y = accuracy, mode = 'lines+markers', name = 'Accuracy', line = dict(color = 'lightblue')))
-            fig.add_trace(go.Scatter(x = epochs, y = val_accuracy, mode = 'lines+markers', name = 'Validation Accuracy', line = dict(color = 'salmon')))
+            # Ajouter le style CSS à la balise div
+            styled_html_table = f"<div class='background-div'><div class='inner-div'>{html_table}</div></div>"
 
-            fig.update_layout(
-                title='Courbes de précision pour VGG16',
-                xaxis_title='Epoques',
-                yaxis_title='Précision',
-                legend_title='Type de données'
-            )
+            # Afficher le HTML dans Streamlit avec le DataFrame centré sur la page et le fond ajusté à la taille du DataFrame
+            st.markdown(css_style, unsafe_allow_html=True)
+            st.markdown(styled_html_table, unsafe_allow_html=True)
 
-            st.plotly_chart(fig)
 
     ### Quatrième onglet
     with tab4:
