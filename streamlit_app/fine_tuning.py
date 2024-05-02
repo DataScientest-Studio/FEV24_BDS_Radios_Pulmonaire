@@ -72,7 +72,7 @@ def show_fine_tuning():
         
         #st.image(r".\images\neurone-biologique-et-artificiel.png", caption='Un neurone biologique vs un Perceptron (neurone artificiel)')
         # chemin du fichier de l'image
-        image_path = r".\images\neurone-biologique-et-artificiel.png"
+        image_path = r".\images\ann_bnn_wbg.png"
         # afficher l'image centrée avec markdown
         st.markdown("<p style='text-align: center; color: grey;'>" + img_to_html(image_path) + "</p>", unsafe_allow_html=True)
         # La légende de l'image
