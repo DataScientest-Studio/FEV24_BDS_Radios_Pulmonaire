@@ -78,7 +78,6 @@ def show_test():
             time.sleep(0.5)
             bar_progress = 10
             my_bar.progress(bar_progress, text = "Réalisation du preprocessing...")
-            st.success("👏 Prédictions réalisées avec succès !") if bar_progress == 100 else None       
     
     st.header("", divider = 'gray')
 
@@ -95,11 +94,11 @@ def show_test():
         img_normalized /= np.array([0.229, 0.224, 0.225])  # Division par l'écart-type par canal
         img_normalized = img_normalized.reshape(-1, 224, 224, 3)  # Remodeler pour correspondre aux attentes du modèle (batch_size, height, width, channels)
         bar_progress = 30
-        my_bar.progress(bar_progress, text = "Calcul des prédictions...")
+        my_bar.progress(bar_progress, text = "Estimation des prédictions...")
         time.sleep(0.5)
         predictions = model.predict(img_normalized)
         bar_progress = 70
-        my_bar.progress(bar_progress, text = "Affichage de la GRAD-CAM...")
+        my_bar.progress(bar_progress, text = "Génération de la GRAD-CAM...")
         time.sleep(0.5)
 
         col1, col2, col3 = st.columns([0.3, 0.4, 0.3])
