@@ -11,7 +11,7 @@ with open(r"C:\Users\Gamy\Documents\GitHub\FEV24_BDS_Radios_Pulmonaire\models\hi
 
 def show_fine_tuning():
 
-    tab1, tab2, tab3, tab4 = st.tabs(["🛠️ Preprocessing", "📈 Benchmarks", "💻 Modèles testés", "🤖 Modèle final"])
+    tab0, tab1, tab2, tab3, tab4 = st.tabs(["📚 Rappels DL & CNN", "🛠️ Preprocessing", "📈 Modélisation", "💻 Modèles testés", "🤖 Modèle final"])
     
     st.markdown("""
     <style>
@@ -35,17 +35,88 @@ def show_fine_tuning():
         }
     </style>""", unsafe_allow_html = True)
     
+    #---------------------------------------------------------------------
+    # Les deux fonctions suivantes pour centrer les images dans les pages
+    # fonction qui coverti une image en foramt bytes
+    def img_to_bytes(img_path):
+        import base64
+        from pathlib import Path
+        img_bytes = Path(img_path).read_bytes()
+        encoded = base64.b64encode(img_bytes).decode()
+        return encoded
+    # fonction qui coverti l'image encoder en html
+    def img_to_html(img_path):
+        img_html = "<img src='data:image/png;base64,{}' class='img-fluid'>".format(img_to_bytes(img_path)
+        )
+        return img_html
+    #---------------------------------------------------------------------   
+ 
+
+    ### Onglet 0 : Présentation d'un CNN
+    with tab0:
+        st.header("Deep Learning & CNN")
+        st.write("#### 1. Réseaux de neurones artificiels")
+        st.markdown('''
+            Un réseau de neurones est un ensemble de couches constitués de **Perceptrons**. Ce entité de base cherche à **imiter le fonctionnement d'un neurones biologique** grâce à des concepts mathématiques notamment le produits scalaires.\n
+            Un Perceptron effectue des calculs pour détecter des caractéristiques ou des tendances dans les données d’entrée.\n
+            Un réseau neuronal *'**Feed-Forward**'* est constitué de plusieurs perceptron à couches multiples.
+        ''')
+        
+        #st.image(r".\images\neurone-biologique-et-artificiel.png", caption='Un neurone biologique vs un Perceptron (neurone artificiel)')
+        # chemin du fichier de l'image
+        image_path = r".\images\neurone-biologique-et-artificiel.png"
+        # afficher l'image centrée avec markdown
+        st.markdown("<p style='text-align: center; color: grey;'>" + img_to_html(image_path) + "</p>", unsafe_allow_html=True)
+        # La légende de l'image
+        st.markdown("<div style='text-align: center; color: grey;'>Un neurone biologique vs un Perceptron (neurone artificiel)</div>", unsafe_allow_html=True)
+        
+        # Séparateur ligne
+        st.write("___")
+        
+        st.write("#### 2. Convolutional Neural Network (CNN)")
+        
+        st.markdown('''
+        Les réseaux de neurones convolutifs désignent une sous-catégorie de réseaux de neurones : ils présentent donc toutes les mêmes caractéristiques d'un réseau de neurones. Cependant, les CNN sont spécialement conçus pour traiter des images en entrée.\n
+        Leur architecture est alors plus spécifique : elle est composée de deux blocs principaux: un extracteur de caractéristiques ou partie convolutive *'**features extraction bloc**'*, et un bloc pour la classification.\n
+        
+        La partie convolutive est constitué des couches suivantes:
+        
+        - Convolution : en utilisant des **filtres** et le **produit de convolution**, les caractéristiques de l'image d'entrée sont extraites.
+        - Pooling : méthode de sous échantillonnage, l'objectif est de sous-échantillonner l'entrée en réduisant sa dimension. L'intérêt est la réduction du coût de calcul **en réduisant le nombre de paramètres à apprendre**. les deux méthodes les plus utilisées sont: le **Max-Pooling** (valeur maximum) et l'**Average Pooling** (valeur moyenne).
+        
+        ''')
+        
+        #st.image(r".\images\layers_CNN.png", caption="Architecture d'un réseau de neurones convolutifs CNN")
+        image_path = r".\images\layers_CNN.png"
+        # afficher l'image centrée avec markdown
+        st.markdown("<p style='text-align: center; color: grey;'>" + img_to_html(image_path) + "</p>", unsafe_allow_html=True)
+        # La légende de l'image
+        st.markdown("<div style='text-align: center; color: grey;'>Architecture d'un réseau de neurones convolutifs CNN</div>", unsafe_allow_html=True)
+        
+        # Démonstration avec l'application de reconnaissance de chiffres 
+        st.button("Reset", type="primary")
+        if st.button('DEMO'):
+                st.write("##### Démonstration en direct : fonctionnement d'un CNN")
+                st.link_button("DEMO Chiffre écrit à la main", "https://adamharley.com/nn_vis/cnn/3d.html")
+
+
     ### Premier onglet
     with tab1:
         st.header("Preprocessing des images")
+        
+        st.write("#### 1. Metadata des images")
         st.markdown('''
             Une étape très importante de notre projet est l'attention portée au traitement des images d'entrée. Nous avons pu voir précédemment que les images possèdent pour certaines, des dimensions et/ou un nombre de canaux différents. Il est important d'homogénéiser l'ensemble des paramètres de nos images pour assurer une bonne performance de nos modèles, et surtout, des résultats comparables. Les éléments en question sont :
-            - Une dimension homogène et carrée, par défaut 256x256 pixels.
+            - Une dimension homogène et carrée, par défaut 299x299 pixels.
             - Un nombre de trois canaux de couleur.
             - Une normalisation de la valeur des pixels.\n
             Une fonction `preproc_img()` est conçue pour simplifier ces étapes, améliorer la reproductibilité et faciliter les ajustements. Elle retourne automatiquement les **ensembles d'entraînement et de test**.
         ''')
-
+        
+        # Séparateur ligne
+        st.write("___")
+        
+        st.write("#### 2. Fonctions de pre-processing")
         # Style CSS pour listes à puces internes
         st.markdown('''
         <style>
@@ -106,12 +177,19 @@ def show_fine_tuning():
 
         with st.expander("Voir le code de la fonction preproc_img()"):
             st.code(code, language = 'python')
-    
+        
+        
         st.markdown('''Le processus de prétraitement des données consiste à uniformiser les données en les important via `OpenCV` avec `cv2.IMREAD_GRAYSCALE` et en les convertissant en uint8 pour économiser de la mémoire. 
                        Les images peuvent être redimensionnées à la résolution de notre choix, stockées sous forme d'arrays numpy. 
                        Une normalisation de l'intensité des pixels peut être appliquée selon les besoins et les attentes des modèles, et des méthodes d'équilibrage des classes comme l'undersampling ou l'oversampling peuvent être envisagées en raison de différences significatives dans leur répartition. 
                        Les premiers masques sont utilisés pour limiter la surface aux informations utiles, avec la possibilité de créer de nouveaux masques.
                     ''')
+        
+        # Séparateur ligne
+        st.write("___")
+        
+        st.write("#### 3. Encodage des labels")
+        
         st.markdown(''' Dernière étape après nos images propres et normalisées, il est nécessaire de transformer nos labels multiclasses en entiers afin d'assurer la compatibilité avec une les modèles de classificiation.
                         Cette étape nécessite seulement un traitement par **One Hot Encoding** grâce à `LabelEncoder()`.
                     ''')
@@ -128,53 +206,126 @@ def show_fine_tuning():
         # Afficher le HTML dans Streamlit avec la largeur calculée
         st.markdown(f"<div style='border: 1px solid white; border-radius: 5px; padding: 10px; background-color: #343434; line-height: 1; width: 350px; margin: 0 auto;'>{html_table}</div>", unsafe_allow_html=True)
     
+    
+    
     ### Deuxième onglet
     with tab2:
-            df = pd.read_csv(r"df_file\Lenet_nb_image.csv")
-            df2 = pd.read_csv(r"df_file\Lenet_nb_epoque.csv") 
+        st.header("Démarche de modélisation")
+        st.markdown("Nous nous sommes mis d'accord pour commencer par un modèle basique, en l'occurrence **LeNet5**, eafin de prendre en main la modélisation en Deep Learning. Ensuite, travailler avec des modèles plus complexes qui sont disponibles dans **Keras Applications**, nous avons fait du **transfert learning** à partir de ces modèles-là, en réentrainant les dernières couches sur notre base de données. Enfin, avec le module **Keras Tuner** nous avons pu ajuster plus finement nos modèles.  ")
+        
+        # LeNet5 
+        st.write("#### 1. LeNet5")
+        st.markdown(''' LeNet est une structure de réseau neuronal convolutif proposée par LeCun et al. en 1998. En général, LeNet fait référence à LeNet-5 et est un réseau neuronal convolutif simple. Les réseaux neuronaux convolutifs sont une sorte de réseau neuronal feed-forward dont les neurones artificiels peuvent répondre à une partie des cellules environnantes dans la zone de couverture et donnent de bons résultats dans le traitement d'images à grande échelle. *Source: https://en.wikipedia.org/wiki/LeNet*. 
+                    ''')        
+        #st.image(r".\images\LeNet5_architecture.png", caption="Architecture du LeNet5")
+        # chemin du fichier de l'image
+        image_path = r".\images\LeNet5_architecture.png"
+        # afficher l'image centrée avec markdown
+        st.markdown("<p style='text-align: center; color: grey;'>" + img_to_html(image_path) + "</p>", unsafe_allow_html=True)
+        # La légende de l'image
+        st.markdown("<div style='text-align: center; color: grey;'>Architecture du LeNet5</div>", unsafe_allow_html=True)
+        
+        
+        
+        
+        st.write("##### Etudes paramétriques: nombre d'images et nombre d'Epochs")
+        
+        st.markdown(''' L'efficacité et la simplicité, du modèle LeNet5, nous ont permis de réaliser des études paramétriques assez rapidement afin de le nombre d'images et d'époques à partir desquels les performances du modèle n'évoluent plus. Ceci nous a permis d'économiser en temps et coût de calcul par la suite en utilisant des modèles plus complexes.  
+                    ''') 
+        
+        col1, col2 = st.columns([1, 1])
+        
+        with col1:
+            st.image(r".\images\LeNet-5_benchmark_n_img.png", caption="Courbe d’apprentissage du modèle LeNet-5 en fonction du nombre d’images utilisées")
+            
+            
+        with col2:
+            st.image(r".\images\LeNet-5_benchmark_epochs.png", caption="Courbe d’apprentissage du modèle LeNet-5 en fonction du nombre d’époques")            
+               
+        st.markdown('''
+        Par la suite, nous entrainons les modèles avec les paramètres suivants : 
+        - 900 images par classe.
+        - 20 epochs.
+        
+        ''')
+    
+        # Séparateur ligne
+        st.write("___")
+              
+        # 2. Keras Tuner
+        st.write("#### 2. Keras Tuner")  
+        st.markdown('''
+        Keras Tuner est un module qui permet de réaliser une étude d’optimisation des hyperparamètres afin de trouver les meilleures combinaisons de paramètres, permettant d’ajuster un peu plus finement le modèle (O’Malley et al., 2019).\n
 
+        Il existe plusieurs fonctions intéressantes pour la recherche de paramètres optimaux pour un ajustement plus fin des modèles. RandomSearch() est très pratique pour chercher de manière aléatoire ces hyperparamètres optimaux,  elle prend en argument le modèle, la métrique à maximiser, les paramètres à faire varier, etc.
+        
+        ''')
 
-            col1, col2 = st.columns(2)
+        # Définir le code comme une chaîne de caractères longue
+        code = """
+            # 1. Définir une fonction qui construit le modèle avec les HP
+            def build_model(hp):
+                model = keras.Sequential()
+                model.add(layers.Flatten())
+                # Tune the number of layers.
+                for i in range(hp.Int("num_layers", 1, 3)):
+                    model.add(
+                        layers.Dense(
+                            # Tune number of units separately.
+                            units=hp.Int(f"units_{i}", min_value=32, max_value=512, step=32),
+                            activation=hp.Choice("activation", ["relu", "tanh"]),
+                        )
+                    )
+                if hp.Boolean("dropout"):
+                    model.add(layers.Dropout(rate=0.25))
+                model.add(layers.Dense(10, activation="softmax"))
+                learning_rate = hp.Float("lr", min_value=1e-4, max_value=1e-2, sampling="log")
+                model.compile(
+                    optimizer=keras.optimizers.Adam(learning_rate=learning_rate),
+                    loss="categorical_crossentropy",
+                    metrics=["accuracy"],
+                )
+                return model
 
-            with col1 :
+            build_model(keras_tuner.HyperParameters())
+            
+            
+            # 2. RandomSearch pour chercher les meilleurs combinaison d'hyperparamètres
+            tuner = keras_tuner.RandomSearch(
+                hypermodel=build_model,
+                objective="val_accuracy",
+                max_trials=3,
+                executions_per_trial=2,
+                overwrite=True,
+                directory="my_dir",
+                project_name="helloworld",
+            )
+            """
+        with st.expander("Voir le code de KerasTuner"):
+            st.code(code, language = 'python')
+            
 
-                fig = go.Figure()
+        # séparer les sections avec une ligne
+        st.write("___")
+        
+        # 3. Transfert Learning
+        st.write("#### 3. Transfert Learning")  
+        st.markdown('''
+        Le transfert learning est une technique en apprentissage automatique où un modèle pré-entraîné sur une tâche est réutilisé comme point de départ pour résoudre une autre tâche similaire. Plutôt que de construire un nouveau modèle à partir de zéro, on exploite les connaissances et les représentations déjà apprises (les poids), ce qui permet d'améliorer l'apprentissage sur des ensembles de données plus petits ou différents. 
+        ''')       
+        
+        # Tableau qui résume les modèles choisis pour le Transfet Learning
+        data = {
+            'Modèle': ['InceptionResNet', 'ResNet', 'DenseNet', 'VGG', 'ConvNext', 'EfficientNet'],
+            'Versions': ['InceptionResNetV2', 'ResNet121V2', 'DenseNet201', 'VGG16, VGG19', 'ConvNextBase, ConvNextTiny', 'EfficientNetB0, EfficientNetB1, EfficientNetB2, EfficientNetB3, EfficientNetB4, EfficientNetB5, EfficientNetB6']
+        }
+        df = pd.DataFrame(data)
 
-                fig.add_trace(go.Scatter(x=df['nombre_images'], y=df['Precision max'], mode='lines+markers', name='Precision max', line=dict(color='lightblue')))
-                fig.add_trace(go.Scatter(x=df['nombre_images'], y=df['Precision max validation'], mode='lines+markers', name='Precision max validation', line=dict(color='salmon')))
+        # Convertir le dataframe en HTML avec les styles CSS
+        html_table = df.to_html(index=False, justify='center', classes='styled-table')
 
-                fig.add_vline(x=1325, line=dict(color='red', width=1, dash='dash'))
-                fig.update_layout(title="Evolution de la précision max en fonction du nombre d'image",
-                                xaxis_title='Nombre d\'images',
-                                yaxis_title='Précision max',
-                                template='plotly_white',
-                                paper_bgcolor='rgba(0,0,0,0)',
-                                plot_bgcolor='rgba(0,0,0,0)',
-                                legend=dict(font=dict(color='white')),
-                                xaxis=dict(tickfont=dict(color='white')),
-                                yaxis=dict(tickfont=dict(color='white')),
-                                title_font=dict(color='white'))
-                st.plotly_chart(fig)
-
-            with col2: 
-
-                fig2 = go.Figure()
-
-                fig2.add_trace(go.Scatter(x=df2['Nombre epoque'], y=df2['Precision max'], mode='lines+markers', name='Precision max', line=dict(color='lightblue')))
-                fig2.add_trace(go.Scatter(x=df2['Nombre epoque'], y=df2['Precision max validation'], mode='lines+markers', name='Precision max validation', line=dict(color='salmon')))
-
-                fig2.update_layout(title="Evolution de la précision max en fonction du nombre d'époque",
-                                xaxis_title='Nombre d\'époque',
-                                yaxis_title='Précision max',
-                                template='plotly_white',
-                                paper_bgcolor='rgba(0,0,0,0)',
-                                plot_bgcolor='rgba(0,0,0,0)',
-                                legend=dict(font=dict(color='white')),
-                                xaxis=dict(tickfont=dict(color='white')),
-                                yaxis=dict(tickfont=dict(color='white')),
-                                title_font=dict(color='white'))
-
-                st.plotly_chart(fig2)
+        # Afficher le HTML dans Streamlit avec la largeur calculée
+        st.markdown(f"<div style='border: 1px solid white; border-radius: 5px; padding: 10px; background-color: #343434; line-height: 1; width: 350px; margin: 0 auto;'>{html_table}</div>", unsafe_allow_html=True)           
 
     ### Troisième onglet
     with tab3:
@@ -260,6 +411,15 @@ def show_fine_tuning():
         path_pickle = {"VGG16" : r"pickle_file\model_historyVGG16BP_test.pkl",
                     "DenseNet" : r"pickle_file\history_DenseNet201_finetuned_0_95_20epochs.pkl"}
         
+        best_hp = {"VGG16" : """ 
+                   - Dernière couche dense : 1024 neurones
+                   - Dropout : 0
+                   - Learningrate : 10e-4 """,
+                   "DenseNet" : """ 
+                    - Dernière couche dense : 256 neurones (Regularisation L2 : 0.01)
+                    - Dropout : 0.4,
+                    - Learning rate : 10e-4 """}
+        
         with open(path_pickle[model_f], 'rb') as fichier:
         # Charger les données à partir du fichier
             history = pickle.load(fichier)
@@ -273,3 +433,5 @@ def show_fine_tuning():
     with Col2:
         plot_precision_curve(history)
         plot_f1_score(history)
+
+    st.markdown(best_hp[model_f])
