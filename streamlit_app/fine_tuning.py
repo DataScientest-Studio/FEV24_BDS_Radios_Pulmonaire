@@ -315,7 +315,7 @@ def show_fine_tuning():
         Plutôt que de construire un nouveau modèle à partir de zéro, on exploite les connaissances et les représentations déjà apprises (les poids), ce qui permet d'améliorer l'apprentissage sur des ensembles de données plus petits ou différents. 
         ''')       
         
-        # Tableau qui résume les modèles choisis pour le Transfet Learning
+        # Tableau qui résume les modèles choisis pour le Transfer Learning
         data = {
             'Modèle': ['InceptionResNet', 'ResNet', 'DenseNet', 'VGG', 'ConvNext', 'EfficientNet'],
             'Versions': ['InceptionResNetV2', 'ResNet121V2', 'DenseNet201', 'VGG16, VGG19', 'ConvNextBase, ConvNextTiny', 'EfficientNetB0, EfficientNetB1, EfficientNetB2, EfficientNetB3, EfficientNetB4, EfficientNetB5, EfficientNetB6']
