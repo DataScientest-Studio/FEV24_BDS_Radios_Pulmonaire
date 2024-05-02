@@ -77,7 +77,7 @@ def show_fine_tuning():
         st.markdown("<div style='text-align: center; color: grey;'>Un neurone biologique vs un Perceptron (neurone artificiel)</div>", unsafe_allow_html=True)
         
         # Séparateur ligne
-        st.write("___")
+        st.header("", divider = "gray")
         
         st.write("#### 2. Convolutional Neural Network (CNN)")
         
@@ -100,10 +100,8 @@ def show_fine_tuning():
         st.markdown("<div style='text-align: center; color: grey;'>Architecture d'un réseau de neurones convolutifs CNN</div>", unsafe_allow_html=True)
         
         # Démonstration avec l'application de reconnaissance de chiffres 
-        st.button("Reset", type="primary")
-        if st.button('DEMO'):
-                st.write("##### Démonstration en direct : fonctionnement d'un CNN")
-                st.link_button("DEMO Chiffre écrit à la main", "https://adamharley.com/nn_vis/cnn/3d.html")
+        st.write("##### Démonstration en direct : fonctionnement d'un CNN")
+        st.link_button("DEMO Chiffre écrit à la main", "https://adamharley.com/nn_vis/cnn/3d.html")
 
 
     ### Premier onglet
@@ -120,7 +118,7 @@ def show_fine_tuning():
         ''')
         
         # Séparateur ligne
-        st.write("___")
+        st.header("", divider = "gray")
         
         st.write("#### 2. Fonctions de pre-processing")
         # Style CSS pour listes à puces internes
@@ -192,7 +190,7 @@ def show_fine_tuning():
                     ''')
         
         # Séparateur ligne
-        st.write("___")
+        st.header("", divider = "gray")
         
         st.write("#### 3. Encodage des labels")
         
@@ -231,9 +229,6 @@ def show_fine_tuning():
         # La légende de l'image
         st.markdown("<div style='text-align: center; color: grey;'>Architecture du LeNet5</div>", unsafe_allow_html=True)
         
-        
-        
-        
         st.write("##### Etudes paramétriques: nombre d'images et nombre d'Epochs")
         
         st.markdown(''' L'efficacité et la simplicité, du modèle LeNet5, nous ont permis de réaliser des études paramétriques assez rapidement afin de le nombre d'images et d'époques à partir desquels les performances du modèle n'évoluent plus. Ceci nous a permis d'économiser en temps et coût de calcul par la suite en utilisant des modèles plus complexes.  
@@ -256,7 +251,7 @@ def show_fine_tuning():
         ''')
     
         # Séparateur ligne
-        st.write("___")
+        st.header("", divider = "gray")
               
         # 2. Keras Tuner
         st.write("#### 2. Keras Tuner")  
@@ -309,10 +304,9 @@ def show_fine_tuning():
             """
         with st.expander("Voir le code de KerasTuner"):
             st.code(code, language = 'python')
-            
-
+    
         # séparer les sections avec une ligne
-        st.write("___")
+        st.header("", divider = "gray")
         
         # 3. Transfer Learning
         st.write("#### 3. Transfer Learning")  
