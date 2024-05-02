@@ -260,6 +260,15 @@ def show_fine_tuning():
         path_pickle = {"VGG16" : r"pickle_file\model_historyVGG16BP_test.pkl",
                     "DenseNet" : r"pickle_file\history_DenseNet201_finetuned_0_95_20epochs.pkl"}
         
+        best_hp = {"VGG16" : """ 
+                   - Dernière couche dense : 1024 neurones
+                   - Dropout : 0
+                   - Learningrate : 10e-4 """,
+                   "DenseNet" : """ 
+                    - Dernière couche dense : 256 neurones (Regularisation L2 : 0.01)
+                    - Dropout : 0.4,
+                    - Learning rate : 10e-4 """}
+        
         with open(path_pickle[model_f], 'rb') as fichier:
         # Charger les données à partir du fichier
             history = pickle.load(fichier)
@@ -273,3 +282,5 @@ def show_fine_tuning():
     with Col2:
         plot_precision_curve(history)
         plot_f1_score(history)
+
+    st.markdown(best_hp[model_f])
