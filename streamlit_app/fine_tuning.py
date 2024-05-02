@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import pickle
 import plotly.graph_objects as go
+from graph_model_F import plot_auc, plot_f1_score, plot_loss_curve , plot_precision_curve
 
 with open(r"C:\Users\Gamy\Documents\GitHub\FEV24_BDS_Radios_Pulmonaire\models\history_DenseNet201_finetuned.pkl", "rb") as file1:
     history_densenet = pickle.load(file1)
@@ -187,4 +188,22 @@ def show_fine_tuning():
 
     ### Quatrième onglet
     with tab4:
-        st.markdown("Texte filler")
+
+        model_f = st.selectbox ('Meilleurs modèles', options = ["VGG16" , "DenseNet"] ) 
+
+        path_pickle = {"VGG16" : r"pickle_file\model_historyVGG16BP_test.pkl",
+                    "DenseNet" : r"pickle_file\history_DenseNet201_finetuned_0_95_20epochs.pkl"}
+        
+        with open(path_pickle[model_f], 'rb') as fichier:
+        # Charger les données à partir du fichier
+            history = pickle.load(fichier)
+        
+    Col1 , Col2 = st.columns(2)
+
+    with Col1:
+        plot_loss_curve(history)
+        plot_auc(history)
+    
+    with Col2:
+        plot_precision_curve(history)
+        plot_f1_score(history)
