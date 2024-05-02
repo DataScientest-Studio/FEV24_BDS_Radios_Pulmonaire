@@ -1,6 +1,0 @@
-InceptionResNetV2,Précision ,Recall ,F1 Score 
-COVID,0.93,0.94,0.93
-Lung_Opacity,0.88,0.82,0.85
-Normal,0.8,0.84,0.82
-Viral_Pneumonia,0.96,0.97,0.97
-Précision Globale,0.89,,

@@ -1,40 +1,46 @@
 import streamlit as st
 import pandas as pd
 import pickle
+import numpy as np
 import plotly.graph_objects as go
-from graph_model_F import plot_auc, plot_f1_score, plot_loss_curve , plot_precision_curve
+from custom_functions import plot_auc, plot_f1_score, plot_loss_curve , plot_precision_curve
 
-with open(r"C:\Users\Gamy\Documents\GitHub\FEV24_BDS_Radios_Pulmonaire\models\history_DenseNet201_finetuned.pkl", "rb") as file1:
+with open("models\history_DenseNet201.pkl", "rb") as file1:
     history_densenet = pickle.load(file1)
-with open(r"C:\Users\Gamy\Documents\GitHub\FEV24_BDS_Radios_Pulmonaire\models\history_VGG16.pkl", "rb") as file2:
+with open("models\history_VGG16.pkl", "rb") as file2:
     history_vgg = pickle.load(file2)
 
 def show_fine_tuning():
-
-    tab0, tab1, tab2, tab3, tab4 = st.tabs(["📚 Rappels DL & CNN", "🛠️ Preprocessing", "📈 Modélisation", "💻 Modèles testés", "🤖 Modèle final"])
-    
+    # Style des onglets
     st.markdown("""
-    <style>
-        .stTabs [data-baseweb = "tab-list"] {
-            gap: 5px;
-        }
-        .stTabs [data-baseweb = "tab"] {
-            height: 25px;
-            white-space: pre-wrap;
-            background-color: #626C66;
-            border-radius: 4px 4px 0px 0px;
-            border: 1px solid #fff;
-            gap: 5px;
-            padding-top: 10px;
-            padding-bottom: 10px;
-            padding-right: 5px;
-        }
-        .stTabs [aria-selected = "true"] {
-            background-color: #F4FFFD;
-            border : 1px solid #626C66;
-        }
-    </style>""", unsafe_allow_html = True)
-    
+        <style>
+            .stTabs [data-baseweb="tab-list"] {
+                display: flex;
+                gap: 10px;
+            }
+
+            .stTabs [data-baseweb="tab"] {
+                padding: 10px 15px;
+                border: 1px solid transparent;
+                border-radius: 5px 5px 0 0;
+                background-color: transparent;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .stTabs [data-baseweb="tab"]:hover {
+                background-color: #8f8d9b;
+            }
+
+            .stTabs [aria-selected="true"] {
+                background-color:  #57546a;
+                border-color: #ccc;
+                border-bottom-color: transparent;
+            }
+        </style>""", unsafe_allow_html = True)
+
+    tab0, tab1, tab2, tab3, tab4 = st.tabs(["📚 Rappels Deep Learning", "🛠️ Preprocessing", "📈 Modélisation", "💻 Modèles testés", "🤖 Modèles finaux"])
+        
     #---------------------------------------------------------------------
     # Les deux fonctions suivantes pour centrer les images dans les pages
     # fonction qui coverti une image en foramt bytes
@@ -308,10 +314,11 @@ def show_fine_tuning():
         # séparer les sections avec une ligne
         st.write("___")
         
-        # 3. Transfert Learning
-        st.write("#### 3. Transfert Learning")  
+        # 3. Transfer Learning
+        st.write("#### 3. Transfer Learning")  
         st.markdown('''
-        Le transfert learning est une technique en apprentissage automatique où un modèle pré-entraîné sur une tâche est réutilisé comme point de départ pour résoudre une autre tâche similaire. Plutôt que de construire un nouveau modèle à partir de zéro, on exploite les connaissances et les représentations déjà apprises (les poids), ce qui permet d'améliorer l'apprentissage sur des ensembles de données plus petits ou différents. 
+        Le transfer learning est une technique en apprentissage automatique où un modèle pré-entraîné sur une tâche est réutilisé comme point de départ pour résoudre une autre tâche similaire. 
+        Plutôt que de construire un nouveau modèle à partir de zéro, on exploite les connaissances et les représentations déjà apprises (les poids), ce qui permet d'améliorer l'apprentissage sur des ensembles de données plus petits ou différents. 
         ''')       
         
         # Tableau qui résume les modèles choisis pour le Transfet Learning
@@ -337,19 +344,19 @@ def show_fine_tuning():
             Choice_cr = st.selectbox("Navigation",
                                     options = categorie[Slider])
             
-            csv_path_cr = {"Modèles testés" :r"df_file\df test model.csv",
-                        "InceptionResNetV2" :r"df_file\df InceptionRes.csv",
-                        "ResNet121V2" : r"df_file\df Res.csv",
-                        "DenseNet201": r"df_file\df densenet.csv",
-                        "VGG16" : r"df_file\df VGG16.csv", 
-                        "VGG19" : r"df_file\df VGG19.csv",
-                        "ConvNextTiny" : r"df_file\df Convtiny.csv",
-                        "ConvNextBase" : r"df_file\df Convbase.csv",
-                        "EfficientNet B4" :r"df_file\df efficient.csv",
-                        "EfficientNet" :r"df_file\df efficientnet finetuned.csv",
-                        "ResNet" :r"df_file\df resnet finetuned.csv",
-                        "VGG16_ft" :r"df_file\df VGG16_finetuned.csv",
-                        "DenseNet" :r"df_file\df densenet_finetuned.csv"}
+            csv_path_cr = {"Modèles testés" :r"data\df test model.csv",
+                        "InceptionResNetV2" :r"data\df InceptionRes.csv",
+                        "ResNet121V2" : r"data\df Res.csv",
+                        "DenseNet201": r"data\df densenet.csv",
+                        "VGG16" : r"data\df VGG16.csv", 
+                        "VGG19" : r"data\df VGG19.csv",
+                        "ConvNextTiny" : r"data\df Convtiny.csv",
+                        "ConvNextBase" : r"data\df Convbase.csv",
+                        "EfficientNet B4" :r"data\df efficient.csv",
+                        "EfficientNet" :r"data\df efficientnet finetuned.csv",
+                        "ResNet" :r"data\df resnet finetuned.csv",
+                        "VGG16_ft" :r"data\df VGG16_finetuned.csv",
+                        "DenseNet" :r"data\df densenet_finetuned.csv"}
             
             comm_dico = {"Modèles testés" :""" Voici un récapitulatif des modèles que nous avons testé dans le cadre du transfer learning. """,
                         "InceptionResNetV2" :""" Le modèle a une capacité variable à distinguer les différentes classes de radiographies. La classe Viral Pneumonia présente d'excellents scores de précision, de rappel et de F1, indiquant une identification quasi parfaite, tandis que la classe Normal a montré des difficultés plus marquées, avec les scores les plus bas pour ces mêmes métriques. Le score F1, qui équilibre la précision et le rappel, suggère que le modèle est plus apte à identifier correctement les classes COVID et Viral Pneumonia, __mais qu'il pourrait bénéficier d'un rééquilibrage ou d'un ajustement dans la classification des classes Lung_Opacity et Normal.__ """ ,
@@ -393,14 +400,12 @@ def show_fine_tuning():
 
             col1, col2 = st.columns(2)
 
-            with col1 :
-
-                st.markdown(css_style, unsafe_allow_html=True)
-                st.markdown(styled_html_table, unsafe_allow_html=True)
-            
-            with col2 :
-                 
-                st.markdown(comm_dico[Choice_cr])
+    with col1:
+        st.markdown(css_style, unsafe_allow_html=True)
+        st.markdown(styled_html_table, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown(comm_dico[Choice_cr])
 
 
     ### Quatrième onglet
@@ -408,8 +413,8 @@ def show_fine_tuning():
 
         model_f = st.selectbox ('Meilleurs modèles', options = ["VGG16" , "DenseNet"] ) 
 
-        path_pickle = {"VGG16" : r"pickle_file\model_historyVGG16BP_test.pkl",
-                    "DenseNet" : r"pickle_file\history_DenseNet201_finetuned_0_95_20epochs.pkl"}
+        path_pickle = {"VGG16" : r"models\history_VGG16.pkl",
+                    "DenseNet" : r"models\history_DenseNet201.pkl"}
         
         best_hp = {"VGG16" : """ 
                    - Dernière couche dense : 1024 neurones
@@ -424,14 +429,14 @@ def show_fine_tuning():
         # Charger les données à partir du fichier
             history = pickle.load(fichier)
         
-    Col1 , Col2 = st.columns(2)
+        Col1 , Col2 = st.columns(2)
 
-    with Col1:
-        plot_loss_curve(history)
-        plot_auc(history)
-    
-    with Col2:
-        plot_precision_curve(history)
-        plot_f1_score(history)
+        with Col1:
+            plot_loss_curve(history)
+            plot_auc(history)
+        
+        with Col2:
+            plot_precision_curve(history)
+            plot_f1_score(history)
 
-    st.markdown(best_hp[model_f])
+        st.markdown(best_hp[model_f])

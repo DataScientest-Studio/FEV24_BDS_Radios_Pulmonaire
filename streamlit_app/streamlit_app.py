@@ -13,10 +13,6 @@ import exploration
 import fine_tuning
 import interpretability
 import own_test
-import bibliography
-
-# Chargement des modèles et données au lancement de l'application
-
 
 # HEADER
 image = Image.open('images/banniere.jpg')
@@ -29,8 +25,8 @@ st.header("", divider = 'rainbow')
 # Menu de navigation
 selected = option_menu(
     menu_title = None,
-    options = ["Présentation", "Exploration", "Fine-tuning", "Intérprétabilité", "Utiliser le modèle", "Références"],
-    icons = ["easel3-fill", "eye-fill", "wrench-adjustable", "check-circle-fill", "lightbulb-fill", "book-fill"],
+    options = ["Présentation", "Exploration", "Modélisation", "Intérprétabilité", "Utiliser le modèle"],
+    icons = ["easel3-fill", "eye-fill", "wrench-adjustable", "check-circle-fill", "lightbulb-fill"],
     menu_icon = "cast",
     default_index = 0,
     orientation = "horizontal",
@@ -41,14 +37,12 @@ if selected == "Présentation":
     presentation.show_presentation()
 elif selected == "Exploration":
     exploration.show_exploration()
-elif selected == "Fine-tuning":
+elif selected == "Modélisation":
     fine_tuning.show_fine_tuning()
 elif selected == "Intérprétabilité":
     interpretability.show_interpretability()
 elif selected == "Utiliser le modèle":
     own_test.show_test()
-elif selected == "Références":
-    bibliography.show_references()
 
 st.header("", divider = 'gray')
 # create_styled_box("texte", text_color = '#C9BBCF', background_color = '#957DAD')
@@ -66,7 +60,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns([6, 1, 1])
+col1, col2, col3 = st.columns([0.7, 0.15, 0.15])
 
 with col1:
     show_profile(name = "Alexandre LANGLAIS", linkedin_url = "https://www.linkedin.com/in/alexlanglais/", github_url = "https://github.com/a-langlais")
