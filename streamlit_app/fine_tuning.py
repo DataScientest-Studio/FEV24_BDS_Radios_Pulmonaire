@@ -465,10 +465,6 @@ def show_fine_tuning():
     ### Quatrième onglet
     with tab4:
 
-        model_f = st.selectbox ('Meilleurs modèles', options = ["VGG16" , "DenseNet"] ) 
-
-        path_pickle = {"VGG16" : r"models\history_VGG16.pkl",
-                    "DenseNet" : r"models\history_DenseNet201.pkl"}
         
         best_hp = {"VGG16" : """ 
                    - Dernière couche dense : 1024 neurones
@@ -479,18 +475,21 @@ def show_fine_tuning():
                     - Dropout : 0.4,
                     - Learning rate : 10e-4 """}
         
-        with open(path_pickle[model_f], 'rb') as fichier:
-        # Charger les données à partir du fichier
-            history = pickle.load(fichier)
+
         
         Col1 , Col2 = st.columns(2)
 
         with Col1:
-            plot_loss_curve(history)
-            plot_auc(history)
-        
+            st.header("VGG16 métriques")
+            plot_precision_curve(history_vgg)
+            plot_loss_curve(history_vgg)
+            plot_auc(history_vgg)
+            plot_f1_score(history_vgg)
+            st.markdown(best_hp['VGG16'])
         with Col2:
-            plot_precision_curve(history)
-            plot_f1_score(history)
-
-        st.markdown(best_hp[model_f])
+            st.header("DenseNet métriques")
+            plot_precision_curve(history_densenet)
+            plot_loss_curve(history_densenet)
+            plot_auc(history_densenet)
+            plot_f1_score(history_densenet)
+            st.markdown(best_hp["DenseNet"])
