@@ -372,7 +372,9 @@ def show_fine_tuning():
 
     ### Troisième onglet
     with tab3:
-            Slider = st.select_slider(" ", options = ["Transfer learning" , "Fine Tuning"])
+            col00, col01, col02 = st.columns([0.4, 0.2,0.4])
+            with col01 : 
+                Slider = st.select_slider(" ", options = ["Transfer learning" , "Fine Tuning"])
 
             categorie = {"Transfer learning" :["Modèles testés","InceptionResNetV2","ResNet121V2","DenseNet201","VGG16", "VGG19","ConvNextTiny","ConvNextBase","EfficientNet B4"],
                         "Fine Tuning" : ["EfficientNet", "ResNet", "VGG16_ft" ,"DenseNet"]}
