@@ -212,10 +212,11 @@ def plot_CM_ResNetV2():
 
     confusion_matrix = np.array(confusion_lines)
     class_names = ['Covid', 'Lung opacity', 'Normal', 'Viral Pneumonia']
-    st.title('Matrice de Confusion')
+    size = max(confusion_matrix.shape)
     fig = ff.create_annotated_heatmap(z=confusion_matrix, x=class_names, y=class_names, colorscale='Cividis')
     fig.update_layout(
-        title='Matrice de Confusion',
+        width=size*140,
+        height=size*140,
         xaxis=dict(title='Classe Prédite'),
         yaxis=dict(title='Classe Réelle')
     )
@@ -231,10 +232,11 @@ def plot_CM_ResNet121():
 
     confusion_matrix = np.array(confusion_lines)
     class_names = ['Covid', 'Lung opacity', 'Normal', 'Viral Pneumonia']
-    st.title('Matrice de Confusion')
+    size = max(confusion_matrix.shape)
     fig = ff.create_annotated_heatmap(z=confusion_matrix, x=class_names, y=class_names, colorscale='Cividis')
     fig.update_layout(
-        title='Matrice de Confusion',
+        width=size*140,
+        height=size*140,
         xaxis=dict(title='Classe Prédite'),
         yaxis=dict(title='Classe Réelle')
     )
@@ -250,10 +252,11 @@ def plot_CM_DenseNet201():
 
     confusion_matrix = np.array(confusion_lines)
     class_names = ['Covid', 'Lung opacity', 'Normal', 'Viral Pneumonia']
-    st.title('Matrice de Confusion')
+    size = max(confusion_matrix.shape)
     fig = ff.create_annotated_heatmap(z=confusion_matrix, x=class_names, y=class_names, colorscale='Cividis')
     fig.update_layout(
-        title='Matrice de Confusion',
+        width=size*140,
+        height=size*140,
         xaxis=dict(title='Classe Prédite'),
         yaxis=dict(title='Classe Réelle')
     )
@@ -270,10 +273,11 @@ def plot_CM_VGG16():
 
     confusion_matrix = np.array(confusion_lines)
     class_names = ['Covid', 'Lung opacity', 'Normal', 'Viral Pneumonia']
-    st.title('Matrice de Confusion')
+    size = max(confusion_matrix.shape)
     fig = ff.create_annotated_heatmap(z=confusion_matrix, x=class_names, y=class_names, colorscale='Cividis')
     fig.update_layout(
-        title='Matrice de Confusion',
+        width=size*140,
+        height=size*140,
         xaxis=dict(title='Classe Prédite'),
         yaxis=dict(title='Classe Réelle')
     )
@@ -289,10 +293,11 @@ def plot_CM_VGG19():
 
     confusion_matrix = np.array(confusion_lines)
     class_names = ['Covid', 'Lung opacity', 'Normal', 'Viral Pneumonia']
-    st.title('Matrice de Confusion')
+    size = max(confusion_matrix.shape)
     fig = ff.create_annotated_heatmap(z=confusion_matrix, x=class_names, y=class_names, colorscale='Cividis')
     fig.update_layout(
-        title='Matrice de Confusion',
+        width=size*140,
+        height=size*140,
         xaxis=dict(title='Classe Prédite'),
         yaxis=dict(title='Classe Réelle')
     )
@@ -308,10 +313,11 @@ def plot_CM_ConvnextTiny():
 
     confusion_matrix = np.array(confusion_lines)
     class_names = ['Covid', 'Lung opacity', 'Normal', 'Viral Pneumonia']
-    st.title('Matrice de Confusion')
+    size = max(confusion_matrix.shape)
     fig = ff.create_annotated_heatmap(z=confusion_matrix, x=class_names, y=class_names, colorscale='Cividis')
     fig.update_layout(
-        title='Matrice de Confusion',
+        width=size*140,
+        height=size*140,
         xaxis=dict(title='Classe Prédite'),
         yaxis=dict(title='Classe Réelle')
     )
@@ -327,10 +333,11 @@ def plot_CM_ConvnextBase():
 
     confusion_matrix = np.array(confusion_lines)
     class_names = ['Covid', 'Lung opacity', 'Normal', 'Viral Pneumonia']
-    st.title('Matrice de Confusion')
+    size = max(confusion_matrix.shape)
     fig = ff.create_annotated_heatmap(z=confusion_matrix, x=class_names, y=class_names, colorscale='Cividis')
     fig.update_layout(
-        title='Matrice de Confusion',
+        width=size*140,
+        height=size*140,
         xaxis=dict(title='Classe Prédite'),
         yaxis=dict(title='Classe Réelle')
     )
@@ -346,10 +353,11 @@ def plot_CM_EfficientNet_B4():
 
     confusion_matrix = np.array(confusion_lines)
     class_names = ['Covid', 'Lung opacity', 'Normal', 'Viral Pneumonia']
-    st.title('Matrice de Confusion')
+    size = max(confusion_matrix.shape)
     fig = ff.create_annotated_heatmap(z=confusion_matrix, x=class_names, y=class_names, colorscale='Cividis')
     fig.update_layout(
-        title='Matrice de Confusion',
+        width=size*140,
+        height=size*140,
         xaxis=dict(title='Classe Prédite'),
         yaxis=dict(title='Classe Réelle')
     )
@@ -365,10 +373,11 @@ def plot_CM_VGG16_FT():
 
     confusion_matrix = np.array(confusion_lines)
     class_names = ['Covid', 'Lung opacity', 'Normal', 'Viral Pneumonia']
-    st.title('Matrice de Confusion')
+    size = max(confusion_matrix.shape)
     fig = ff.create_annotated_heatmap(z=confusion_matrix, x=class_names, y=class_names, colorscale='Cividis')
     fig.update_layout(
-        title='Matrice de Confusion',
+        width=size*140,
+        height=size*140,
         xaxis=dict(title='Classe Prédite'),
         yaxis=dict(title='Classe Réelle')
     )
@@ -385,10 +394,11 @@ def plot_CM_ResNetFT():
 
     confusion_matrix = np.array(confusion_lines)
     class_names = ['Covid', 'Lung opacity', 'Normal', 'Viral Pneumonia']
-    st.title('Matrice de Confusion')
+    size = max(confusion_matrix.shape)
     fig = ff.create_annotated_heatmap(z=confusion_matrix, x=class_names, y=class_names, colorscale='Cividis')
     fig.update_layout(
-        title='Matrice de Confusion',
+        width=size*140,
+        height=size*140,
         xaxis=dict(title='Classe Prédite'),
         yaxis=dict(title='Classe Réelle')
     )
@@ -404,10 +414,11 @@ def plot_CM_DenseNetFT():
 
     confusion_matrix = np.array(confusion_lines)
     class_names = ['Covid', 'Lung opacity', 'Normal', 'Viral Pneumonia']
-    st.title('Matrice de Confusion')
+    size = max(confusion_matrix.shape)
     fig = ff.create_annotated_heatmap(z=confusion_matrix, x=class_names, y=class_names, colorscale='Cividis')
     fig.update_layout(
-        title='Matrice de Confusion',
+        width=size*140,
+        height=size*140,
         xaxis=dict(title='Classe Prédite'),
         yaxis=dict(title='Classe Réelle')
     )
@@ -423,10 +434,11 @@ def plot_CM_ENetB4():
 
     confusion_matrix = np.array(confusion_lines)
     class_names = ['Covid', 'Lung opacity', 'Normal', 'Viral Pneumonia']
-    st.title('Matrice de Confusion')
+    size = max(confusion_matrix.shape)
     fig = ff.create_annotated_heatmap(z=confusion_matrix, x=class_names, y=class_names, colorscale='Cividis')
     fig.update_layout(
-        title='Matrice de Confusion',
+        width=size*140,
+        height=size*140,
         xaxis=dict(title='Classe Prédite'),
         yaxis=dict(title='Classe Réelle')
     )
