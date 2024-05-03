@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import pandas as pd
 import pickle
 import numpy as np
@@ -72,7 +73,7 @@ def show_fine_tuning():
         
         #st.image(r".\images\neurone-biologique-et-artificiel.png", caption='Un neurone biologique vs un Perceptron (neurone artificiel)')
         # chemin du fichier de l'image
-        image_path = r".\images\ann_bnn_wbg.png"
+        image_path = r".\images\ann_bnn_no_bg.png"
         # afficher l'image centrée avec markdown
         st.markdown("<p style='text-align: center; color: grey;'>" + img_to_html(image_path) + "</p>", unsafe_allow_html=True)
         # La légende de l'image
@@ -95,7 +96,7 @@ def show_fine_tuning():
         ''')
         
         #st.image(r".\images\layers_CNN.png", caption="Architecture d'un réseau de neurones convolutifs CNN")
-        image_path = r".\images\layers_CNN.png"
+        image_path = r".\images\layers_cnn_no_bg.png"
         # afficher l'image centrée avec markdown
         st.markdown("<p style='text-align: center; color: grey;'>" + img_to_html(image_path) + "</p>", unsafe_allow_html=True)
         # La légende de l'image
@@ -225,7 +226,7 @@ def show_fine_tuning():
                     ''')        
         #st.image(r".\images\LeNet5_architecture.png", caption="Architecture du LeNet5")
         # chemin du fichier de l'image
-        image_path = r".\images\LeNet5_architecture.png"
+        image_path = r".\images\LeNet5_architecture_no_bg.png"
         # afficher l'image centrée avec markdown
         st.markdown("<p style='text-align: center; color: grey;'>" + img_to_html(image_path) + "</p>", unsafe_allow_html=True)
         # La légende de l'image
