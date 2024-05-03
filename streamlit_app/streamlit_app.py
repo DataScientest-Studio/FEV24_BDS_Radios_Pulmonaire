@@ -14,6 +14,8 @@ import fine_tuning
 import interpretability
 import own_test
 
+
+st.set_page_config(layout="wide")
 # HEADER
 image = Image.open('images/banniere.jpg')
 st.image(image, use_column_width = True, width = image.width)
@@ -75,3 +77,4 @@ with col2:
 with col3:
     logo_plm = Image.open('images/logo_esl_plm.jpg')
     st.image(logo_plm, width = 200, use_column_width = False)
+
