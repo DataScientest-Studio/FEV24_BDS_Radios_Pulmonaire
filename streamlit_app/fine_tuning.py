@@ -394,19 +394,94 @@ def show_fine_tuning():
                         "VGG16_ft" :r"data\df VGG16_finetuned.csv",
                         "DenseNet" :r"data\df densenet_finetuned.csv"}
             
-            comm_dico = {"Modèles testés" :""" Voici un récapitulatif des modèles que nous avons testé dans le cadre du transfer learning. """,
-                        "InceptionResNetV2" :""" Le modèle a une capacité variable à distinguer les différentes classes de radiographies. La classe Viral Pneumonia présente d'excellents scores de précision, de rappel et de F1, indiquant une identification quasi parfaite, tandis que la classe Normal a montré des difficultés plus marquées, avec les scores les plus bas pour ces mêmes métriques. Le score F1, qui équilibre la précision et le rappel, suggère que le modèle est plus apte à identifier correctement les classes COVID et Viral Pneumonia, __mais qu'il pourrait bénéficier d'un rééquilibrage ou d'un ajustement dans la classification des classes Lung_Opacity et Normal.__ """ ,
-                        "ResNet121V2" :""" Le modèle a une certaine tendance à confondre la classe COVID avec les classes Lung_Opacity et Normal, comme en témoignent les 11 erreurs dans chaque cas. Néanmoins, la classe Viral Pneumonia est interprétée avec une grande précision, indiquant que les caractéristiques distinctives de cette classe sont bien capturées par le modèle. Les métriques par classe montrent que la classe 3 se distingue avec une précision et un rappel exceptionnels proches de 0.98, menant à un score F1 similaire, qui est une mesure robuste de la précision globale. Les classes COVID, Lung_Opacity, et Normal présentent des scores F1 légèrement plus bas, mais toujours respectables, bien que ces classes pourraient bénéficier d'un réajustement du modèle pour améliorer la distinction entre elles. __La précision globale du modèle à 0.88 est solide, mais l'objectif serait de viser une amélioration dans la classification fine entre les classes similaires.__""" ,
-                        "DenseNet201":"""  Les erreurs de classification les plus courantes semblent se produire entre les classes Lung_Opacity et Normal, sous-entendant des similarités entre les caractéristiques des radiographies que le modèle confond certainement. Selon le tableau de métriques, le modèle a une excellente précision pour la classe COVID et des scores exceptionnels de rappel et de F1 pour la classe Viral Pneumonia, indiquant une classification presque parfaite pour ces catégories. Les classes Lung_Opacity et Normal ont des scores F1 légèrement inférieurs mais comparables. __Tout ceci indique une bonne performance de classification qui reste uniforme entre ces catégories.__""" ,
-                        "VGG16" : """ Le modèle parvient à très bien classer les radiographies des classes Viral (Viral pneumonia) et COVID. Également, même si les résultats restent bons, le modèle commet plus d'erreurs de classification entre les catégories Normal et Lung (Lung_opacity). __Sans ajustement particulier, ce modèle semble déjà prometteur quant à ses capacités à classifier nos radiographies correctement.__""", 
-                        "VGG19" : """ Les résultats obtenus semblent également très bons et superposables  à ceux que nous avons obtenus pour que pour VGG16. __Cependant ce modèle étant un peu plus profond, il demande des ressources computationnelles plus importantes sans que cela ne se répercute de façon évidente sur ses performances.__ """,
-                        "ConvNextTiny" : """ Avec ce modèle il apparaît que la classification est significativement meilleure pour la catégorie  Viral (Viral pneumonia) que pour les autres. Ceci donne un score global en deçà de ce que nous avons pu observer sur d’autres modèles dans les mêmes conditions de test. Les courbes d’apprentissage suggèrent que le modèle pourrait bénéficier d’un nombre d'époques supérieur pour continuer à s’améliorer. """,
-                        "ConvNextBase" : """ La classe Viral pneumonia reste toujours la mieux détectée, suivie de la classe COVID. Les résultats obtenus ici sont donc comparables à ceux obtenus avec le modèle ConvNeXtTiny. Encore une fois le modèle semble pouvoir bénéficier d’un allongement de la durée d'entraînement. Cependant il est à noter que ce modèle peut se montrer gourmand en termes de ressource computationnelle, __une époque de ConvNeXtBase pouvant prendre entre deux et trois fois plus de temps que le modèle ConvNeXtTiny sans montrer une différence flagrante de performance.__""",
-                        "EfficientNet B4" :"""La précision du modèle chute à 0.88 sur l’ensemble test. La détection de la classe COVID n'est pas au niveau de ce que l’on espérait avec une précision de 0.91. __Globalement, le modèle avec ce paramétrage donne de bons résultats.__ Dans la section suivante, nous allons essayer un ajustement plus fin pour avoir de  meilleures performances avec ce modèle. """,
-                        "EfficientNet" :""" __Avec une précision globale de 0.94, c’est le meilleur modèle que nous avons eu pour cette partie concernant la famille de modèles EfficientNet.__ De plus, le modèle semble bien plus performant concernant la classe qui nous intéresse ici (classe COVID), avec une reconnaissance des radiographies COVID à 0.98 avec précision. Pour la suite de nos travaux, le meilleur modèle sera adopté et utilisé pour l’interprétabilité et la suite de cette étude.""",
-                        "ResNet" :""" Bien que performant, le modèle tend à être freiné dans ses performances par la classe Lung_Opacity, dans laquelle il classe des poumons sains et vice-versa. Quelques poumons sains sont aussi incorrectement classés en Viral Pneumonia. __Ce modèle est donc performant, et supprimer la classe Lung_Opacity bénéficierait certainement beaucoup au InceptionResNetV2.__""",
-                        "VGG16_ft" :""" Le modèle a donc été entraîné avec ces paramètres ce qui nous permet d’améliorer encore l’efficacité du modèle par rapport à ce que nous avions obtenu sans finetuning. Les classes les mieux prédites sont COVID et Viral (Viral pneumonia), suivies par les classes Lung Opacity et Normal. De façon intéressante , toutes nos métriques sont au-dessus de 90% et suite à l'entraînement du modèle avec les meilleurs paramètres nous obtenons une accuracy globale de 95%. __Ce modèle semble donc capable de fournir des résultats plus qu’acceptables tout en ayant un coût computationnel très contenu.__""",
-                        "DenseNet" :""" Le rapport de classification montre des valeurs élevées pour la précision, le rappel et le F1 Score pour chaque classe ce qui indique que le modèle est particulièrement performant dans la distinction entre les différentes conditions. A noter cependant qu’il performe tout particulièrement dans la distinction de la classe COVID et de la classe Viral Pneumonia mais est un peu moins efficace dans la détection des classes Normal et Lung_Opacity. Pour le COVID, le modèle a très bien performé, avec seulement 3 faux positifs et faux négatifs. Les résultats pour les autres conditions sont également bons, mais on note quelques erreurs, par exemple, 23 cas de Lung_Opacity ont été confondus avec la classe Normal. __Néanmoins, ces erreurs semblent être faibles en comparaison avec le nombre total de prédictions correctes.__"""}
+            comm_dico = {"Modèles testés" :"""
+                        <div>
+                        Voici un récapitulatif des modèles que nous avons testés dans le cadre du transfer learning.<br>
+                        Nous avons poursuivi ensuite le fine-tuning avec la répartition suivante.<br>
+                        <ul>
+                            <li>DenseNet : Alexandre</li>
+                            <li>ResNet : Camille</li>
+                            <li>VGG16 : Pierre-Jean</li>
+                            <li>EfficientNet : Chaouki</li>                         
+                        </ul>
+                        </div>""",
+                         
+                        "InceptionResNetV2" :""" 
+                        <ul>
+                            <li>Le modèle a une capacité variable à distinguer les différentes classes de radiographies. La classe Viral Pneumonia présente d'excellents scores de précision, de rappel et de F1, indiquant une identification quasi parfaite, tandis que la classe Normal a montré des difficultés plus marquées, avec les scores les plus bas pour ces mêmes métriques.</li>
+                            <li>Le score F1, qui équilibre la précision et le rappel, suggère que le modèle est plus apte à identifier correctement les classes COVID et Viral Pneumonia,</li>
+                            <li><strong>mais qu'il pourrait bénéficier d'un rééquilibrage ou d'un ajustement dans la classification des classes Lung_Opacity et Normal.</strong></li>
+                        </ul>""" ,
+
+                        "ResNet121V2" :""" 
+                        <ul>
+                        <li>Le modèle a une certaine tendance à confondre la classe COVID avec les classes Lung_Opacity et Normal, comme en témoignent les 11 erreurs dans chaque cas. Néanmoins, la classe Viral Pneumonia est interprétée avec une grande précision, indiquant que les caractéristiques distinctives de cette classe sont bien capturées par le modèle.</li>
+                        <li>Les métriques par classe montrent que la classe 3 se distingue avec une précision et un rappel exceptionnels proches de 0.98, menant à un score F1 similaire, qui est une mesure robuste de la précision globale. Les classes COVID, Lung_Opacity, et Normal présentent des scores F1 légèrement plus bas, mais toujours respectables, bien que ces classes pourraient bénéficier d'un réajustement du modèle pour améliorer la distinction entre elles.</li>
+                        <li><strong>La précision globale du modèle à 0.88 est solide, mais l'objectif serait de viser une amélioration dans la classification fine entre les classes similaires.</strong></li>
+                        </ul>""" ,
+
+                        "DenseNet201":"""  
+                        <ul>
+                            <li>Les erreurs de classification les plus courantes semblent se produire entre les classes Lung_Opacity et Normal, sous-entendant des similarités entre les caractéristiques des radiographies que le modèle confond certainement.</li>
+                            <li> Selon le tableau de métriques, le modèle a une excellente précision pour la classe COVID et des scores exceptionnels de rappel et de F1 pour la classe Viral Pneumonia, indiquant une classification presque parfaite pour ces catégories. Les classes Lung_Opacity et Normal ont des scores F1 légèrement inférieurs mais comparables.</li>
+                            <li><strong>Tout ceci indique une bonne performance de classification qui reste uniforme entre ces catégories.</strong></li>
+                        </ul>""" ,
+
+                        "VGG16" : """ 
+                        <ul>
+                        <li>Le modèle parvient à très bien classer les radiographies des classes Viral (Viral pneumonia) et COVID. Également, même si les résultats restent bons, le modèle commet plus d'erreurs de classification entre les catégories Normal et Lung (Lung_opacity).</li>
+                        <li><strong>Sans ajustement particulier, ce modèle semble déjà prometteur quant à ses capacités à classifier nos radiographies correctement.</strong></li>
+                        </ul>""", 
+
+                        "VGG19" : """ 
+                        <ul>
+                        <li>Les résultats obtenus semblent également très bons et superposables à ceux que nous avons obtenus pour que pour VGG16.</li>
+                        <li><strong>Cependant ce modèle étant un peu plus profond, il demande des ressources computationnelles plus importantes sans que cela ne se répercute de façon évidente sur ses performances.</strong></li>
+                        </ul> """,
+
+                        "ConvNextTiny" : """ 
+                        <ul>
+                        <li>Avec ce modèle, il apparaît que la classification est significativement meilleure pour la catégorie Viral (Viral pneumonia) que pour les autres. Ceci donne un score global en deçà de ce que nous avons pu observer sur d’autres modèles dans les mêmes conditions de test.</li>
+                        <li>Les courbes d’apprentissage suggèrent que le modèle pourrait bénéficier d’un nombre d'époques supérieur pour continuer à s’améliorer.</li>
+                        </ul> """,
+
+                        "ConvNextBase": """
+                        <ul>
+                        <li>La classe Viral pneumonia reste toujours la mieux détectée, suivie de la classe COVID. Les résultats obtenus ici sont donc comparables à ceux obtenus avec le modèle ConvNeXtTiny.</li>
+                        <li>Encore une fois le modèle semble pouvoir bénéficier d’un allongement de la durée d'entraînement. Cependant il est à noter que ce modèle peut se montrer gourmand en termes de ressource computationnelle, <strong>une époque de ConvNeXtBase pouvant prendre entre deux et trois fois plus de temps que le modèle ConvNeXtTiny sans montrer une différence flagrante de performance.</strong></li>
+                        </ul>
+                        """,
+                            "EfficientNet B4": """
+                        <ul>
+                        <li>La précision du modèle chute à 0.88 sur l’ensemble test. La détection de la classe COVID n'est pas au niveau de ce que l’on espérait avec une précision de 0.91.</li>
+                        <li><strong>Globalement, le modèle avec ce paramétrage donne de bons résultats.</strong> Dans la section suivante, nous allons essayer un ajustement plus fin pour avoir de meilleures performances avec ce modèle.</li>
+                        </ul>
+                        """,
+                            "EfficientNet": """
+                        <ul>
+                        <li><strong>Avec une précision globale de 0.94, c’est le meilleur modèle que nous avons eu pour cette partie concernant la famille de modèles EfficientNet.</strong> De plus, le modèle semble bien plus performant concernant la classe qui nous intéresse ici (classe COVID), avec une reconnaissance des radiographies COVID à 0.98 avec précision.</li>
+                        <li>Pour la suite de nos travaux, le meilleur modèle sera adopté et utilisé pour l’interprétabilité et la suite de cette étude.</li>
+                        </ul>
+                        """,
+                            "ResNet": """
+                        <ul>
+                        <li>Bien que performant, le modèle tend à être freiné dans ses performances par la classe Lung_Opacity, dans laquelle il classe des poumons sains et vice-versa. Quelques poumons sains sont aussi incorrectement classés en Viral Pneumonia.</li>
+                        <li><strong>Ce modèle est donc performant, et supprimer la classe Lung_Opacity bénéficierait certainement beaucoup au InceptionResNetV2.</strong></li>
+                        </ul>
+                        """,
+                            "VGG16_ft": """
+                        <ul>
+                        <li>Le modèle a donc été entraîné avec ces paramètres ce qui nous permet d’améliorer encore l’efficacité du modèle par rapport à ce que nous avions obtenu sans finetuning. Les classes les mieux prédites sont COVID et Viral (Viral pneumonia), suivies par les classes Lung Opacity et Normal.</li>
+                        <li>De façon intéressante , toutes nos métriques sont au-dessus de 90% et suite à l'entraînement du modèle avec les meilleurs paramètres nous obtenons une accuracy globale de 95%. <strong>Ce modèle semble donc capable de fournir des résultats plus qu’acceptables tout en ayant un coût computationnel très contenu.</strong></li>
+                        </ul>
+                        """,
+                            "DenseNet": """
+                        <ul>
+                        <li>Le rapport de classification montre des valeurs élevées pour la précision, le rappel et le F1 Score pour chaque classe ce qui indique que le modèle est particulièrement performant dans la distinction entre les différentes conditions.</li>
+                        <li>A noter cependant qu’il performe tout particulièrement dans la distinction de la classe COVID et de la classe Viral Pneumonia mais est un peu moins efficace dans la détection des classes Normal et Lung_Opacity. Pour le COVID, le modèle a très bien performé, avec seulement 3 faux positifs et faux négatifs. Les résultats pour les autres conditions sont également bons, mais on note quelques erreurs, par exemple, 23 cas de Lung_Opacity ont été confondus avec la classe Normal. <strong>Néanmoins, ces erreurs semblent être faibles en comparaison avec le nombre total de prédictions correctes.</strong></li>
+                        </ul>
+                        """
+            }
 
             CM_dico =  {"Modèles testés" :"",
                         "InceptionResNetV2" :plot_CM_ResNetV2,
@@ -449,17 +524,29 @@ def show_fine_tuning():
 
             col1, col2 = st.columns(2)
 
-    with col1:
-        st.markdown(css_style, unsafe_allow_html=True)
-        st.markdown(styled_html_table, unsafe_allow_html=True)
-        cola ,colb, colc = st.columns([0.2,0.6,0.2])
-        with colb: 
-            if Choice_cr != "Modèles testés":
-                CM_dico[Choice_cr]()
+            with col1:
+                st.markdown(css_style, unsafe_allow_html=True)
+                st.markdown(styled_html_table, unsafe_allow_html=True)
+                cola ,colb, colc = st.columns([0.2,0.6,0.2])
+                with colb:
+                    if Choice_cr != "Modèles testés":
+                        CM_dico[Choice_cr]()
+                    
             
-    
-    with col2:
-        st.markdown(comm_dico[Choice_cr])
+            with col2:
+                css_style_text = """
+                <style>
+                .centered-text {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                    margin-top: -35%; /* Ajuster la position verticale */
+                }
+                </style>
+                """
+                st.markdown(css_style_text, unsafe_allow_html=True)
+                st.markdown(f"<div class='centered-text'>{comm_dico[Choice_cr]}</div>", unsafe_allow_html=True)
 
 
     ### Quatrième onglet
