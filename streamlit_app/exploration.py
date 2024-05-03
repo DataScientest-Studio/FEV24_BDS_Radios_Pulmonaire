@@ -241,7 +241,11 @@ def show_exploration():
                             image = Image.open(f)
                             cols[i].image(image, caption=f"{sous_dossier}", use_column_width = "auto", width = 299)
             st.success('Images affichées avec succès !', icon = "✅")
-            st.markdown("Nous pouvons remarquer que les images sont toutes en nuances de gris, malgré leur nombre de canaux quelques fois différent. De plus, toutes les radiographies semblent avoir été prises selon une méthode standard, mettant bien les poumons au centre de l'image. Quelques variations peuvent cependant apparaître (bras vers le haut, artefacts visuels, annotations, etc.)")
+            st.markdown('''
+                        Nous pouvons remarquer que les images sont toutes en nuances de gris, malgré leur nombre de canaux quelques fois différent. 
+                        De plus, toutes les radiographies semblent avoir été prises selon une méthode standard, mettant bien les poumons au centre de l'image. 
+                        Quelques variations peuvent cependant apparaître (bras vers le haut, artefacts visuels, annotations, etc.)
+                        ''')
         st.header("", divider = 'gray')
         
         # ==================================================================================================
@@ -289,7 +293,14 @@ def show_exploration():
             st.plotly_chart(fig)
 
         with col2:
-            st.markdown("L'application des masques réduit considérablement l'intensité lumineuse moyenne des images. Ce comportement est tout à fait normal car les masques noircient les parties non pertinentes et font ainsi tendre la moyenne des pixels vers 0.")
+            st.markdown('''
+                        L'application des masques réduit considérablement l'intensité lumineuse moyenne des images. 
+                        Ce comportement est tout à fait normal car les masques noircient les parties non pertinentes et font ainsi tendre la moyenne des pixels vers 0.
+
+                        Ainsi, les valeurs restantes sont les valeurs ayant de la pertinence dans ce que nous cherchons à faire observer au modèle. 
+                        Mais ceci peut aussi entrainer une diminution de la variabilité des images, pouvant entrainer plus de difficultés à la généralisation.
+                        De plus, ceci génère une contrainte supplémentaire lors du déploiement du modèle, nécessitant d'appliquer un masque spécifique aux nouvelles données avant introduction dans le modèle.
+                        ''')
         
         st.header("", divider = 'gray')
         
@@ -337,10 +348,15 @@ def show_exploration():
         # ==================================================================================================
         # ==================================================================================================
 
-        col1, col2 = st.columns([0.3, 0.6])
+        col1, col2 = st.columns([0.4, 0.6])
 
         with col1:
-            st.markdown("test de texte")
+            st.markdown('''
+                        La surface utile des masques est l'ensemble des pixels apportant de l'information dans l'analyse de notre problématique. 
+                        En pratique, il s'agit de l'ensemble des pixels définissant les poumons sur la radiographie.
+                        Des éléments artefactuels peu commun sur la radiographies hors des poumons peut générer de la variabilité que le modèle va prendre en compte, le poussant alors à "observer" des zones qui ne sont pas pertinentes pour notre problématique.
+                        C'est là que l'application des masques pour limiter la "vision" du modèle aux poumons peut s'avérer utile.
+                        ''')
 
         with col2:
             ## Surface utile
