@@ -452,8 +452,11 @@ def show_fine_tuning():
     with col1:
         st.markdown(css_style, unsafe_allow_html=True)
         st.markdown(styled_html_table, unsafe_allow_html=True)
-        if Choice_cr != "Modèles testés":
-            CM_dico[Choice_cr]()
+        cola ,colb, colc = st.columns([0.2,0.6,0.2])
+        with colb: 
+            if Choice_cr != "Modèles testés":
+                CM_dico[Choice_cr]()
+            
     
     with col2:
         st.markdown(comm_dico[Choice_cr])
