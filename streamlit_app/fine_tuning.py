@@ -238,8 +238,8 @@ def show_fine_tuning():
         
         col1, col2 = st.columns([1, 1])
         
-        df = pd.read_csv(r"df_file\Lenet_nb_image.csv")
-        df2 = pd.read_csv(r"df_file\Lenet_nb_epoque.csv") 
+        df = pd.read_csv(r"data\Lenet_nb_image.csv")
+        df2 = pd.read_csv(r"data\Lenet_nb_epoque.csv") 
 
 
         col1, col2 = st.columns(2)
