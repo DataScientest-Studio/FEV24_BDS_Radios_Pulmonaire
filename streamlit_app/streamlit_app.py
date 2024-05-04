@@ -11,11 +11,10 @@ import tensorflow as tf
 import presentation
 import exploration
 import fine_tuning
-import interpretability
 import own_test
 
+st.set_page_config(page_title = "Classification de radiographies pulmonaires", layout = "wide", page_icon = "⚕️")
 
-st.set_page_config(layout="wide")
 # HEADER
 image = Image.open('images/banniere.jpg')
 st.image(image, use_column_width = True, width = image.width)
@@ -27,8 +26,8 @@ st.header("", divider = 'rainbow')
 # Menu de navigation
 selected = option_menu(
     menu_title = None,
-    options = ["Présentation", "Exploration", "Modélisation", "Intérprétabilité", "Utiliser le modèle"],
-    icons = ["easel3-fill", "eye-fill", "wrench-adjustable", "check-circle-fill", "lightbulb-fill"],
+    options = ["Présentation", "Exploration", "Modélisation", "Utiliser le modèle"],
+    icons = ["easel3-fill", "eye-fill", "wrench-adjustable", "lightbulb-fill"],
     menu_icon = "cast",
     default_index = 0,
     orientation = "horizontal",
@@ -41,8 +40,6 @@ elif selected == "Exploration":
     exploration.show_exploration()
 elif selected == "Modélisation":
     fine_tuning.show_fine_tuning()
-elif selected == "Intérprétabilité":
-    interpretability.show_interpretability()
 elif selected == "Utiliser le modèle":
     own_test.show_test()
 
