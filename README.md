@@ -84,14 +84,15 @@ conda activate environment
 
 ## Streamlit App
 
-**Add explanations on how to use the app.**
+Le Streamlit est constitué d'un menu horizontal où les différentes étapes du projet sont résumées.
+Dnas la partie "Utilisation du modèle", il est possible d'utiliser l'application web pour intégrer une image et recevoir la prédiction en temps réel, accompagnée de la GRADCAM associée.
 
 Pour lancer l'application streamlit :
 
 ```shell
-conda create --name my-awesome-streamlit python=3.10
-conda activate my-awesome-streamlit
-pip install -r requirements.txt
+conda create --name chest_radiography_streamlit python=3.11
+conda activate chest_radiography_streamlit
+pip install -r streamlit_requirements.txt
 streamlit run app.py
 ```
 
