@@ -26,7 +26,7 @@ L’étape de finetuning a été caractérisée par le dégèlement de couches e
 ## Organisation du répertoire
 
 Ce répertoire suit une hiérarchie classique et facile à explorer.
-Les modèles étant trop volumineux pour ce repo GitHub, ils sont disponibles sur [🤗 HuggingFace](https://huggingface.co/spaces/a-langlais/streamlit_chest_radiography_DL/tree/main/models).
+Les modèles étant trop volumineux pour ce repo GitHub, ils sont disponibles sur 🤗 [HuggingFace](https://huggingface.co/spaces/a-langlais/streamlit_chest_radiography_DL/tree/main/models).
 
 ```
 FEV24_BDS_Radios_Pulmonaire/
