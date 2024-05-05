@@ -2,30 +2,35 @@ import streamlit as st
 from custom_functions import create_styled_box
 
 def show_presentation():
-
-    tab1, tab2 = st.tabs(["🗣️ Contexte", "🎯 Objectifs"])
-
+    # Style des onglets
     st.markdown("""
-    <style>
-        .stTabs [data-baseweb = "tab-list"] {
-            gap: 5px;
-        }
-        .stTabs [data-baseweb = "tab"] {
-            height: 25px;
-            white-space: pre-wrap;
-            background-color: #626C66;
-            border-radius: 4px 4px 0px 0px;
-            border: 1px solid #fff;
-            gap: 5px;
-            padding-top: 10px;
-            padding-bottom: 10px;
-            padding-right: 5px;
-        }
-        .stTabs [aria-selected = "true"] {
-            background-color: #F4FFFD;
-            border : 1px solid #626C66;
-        }
-    </style>""", unsafe_allow_html = True)
+        <style>
+            .stTabs [data-baseweb="tab-list"] {
+                display: flex;
+                gap: 10px;
+            }
+
+            .stTabs [data-baseweb="tab"] {
+                padding: 10px 15px;
+                border: 1px solid transparent;
+                border-radius: 5px 5px 0 0;
+                background-color: transparent;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .stTabs [data-baseweb="tab"]:hover {
+                background-color: #8f8d9b;
+            }
+
+            .stTabs [aria-selected="true"] {
+                background-color:  #57546a;
+                border-color: #ccc;
+                border-bottom-color: transparent;
+            }
+        </style>""", unsafe_allow_html = True)
+        
+    tab1, tab2 = st.tabs(["🗣️ Contexte", "🎯 Objectifs"])
 
     with tab1:
         st.header("Contexte du projet")

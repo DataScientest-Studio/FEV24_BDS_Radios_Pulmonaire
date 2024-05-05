@@ -1,6 +1,0 @@
-EfficientNet_B4,Précision ,Recall ,F1 Score 
-COVID,0.98,0.98,0.98
-Lung_Opacity,0.95,0.88,0.91
-Normal,0.87,0.95,0.91
-Viral_Pneumonia,1.0,0.99,0.99
-Précision Globale,0.95,,

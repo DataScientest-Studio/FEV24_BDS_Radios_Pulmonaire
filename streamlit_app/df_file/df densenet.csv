@@ -1,6 +1,0 @@
-DenseNet201,Précision ,Recall ,F1 Score 
-COVID,0.95,0.93,0.94
-Lung_Opacity,0.86,0.86,0.86
-Normal,0.84,0.84,0.84
-Viral_Pneumonia,0.98,0.99,0.99
-Précision Globale,0.91,,

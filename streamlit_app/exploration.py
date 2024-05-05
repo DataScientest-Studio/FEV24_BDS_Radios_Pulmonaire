@@ -12,137 +12,210 @@ import plotly.graph_objects as go
 from PIL import Image
 from custom_functions import calc_mean_intensity, source_extract
 
-df_images = pd.read_csv(r'C:/Users/Gamy/Desktop/Formation fev24_bootcamp_ds/chest_radiography_covid19/datasets/processed/df_images.csv')
-df_masks = pd.read_csv(r'C:/Users/Gamy/Desktop/Formation fev24_bootcamp_ds/chest_radiography_covid19/datasets/processed/df_masks.csv')
-df_combined = pd.read_csv(r'C:/Users/Gamy/Desktop/Formation fev24_bootcamp_ds/chest_radiography_covid19/datasets/processed/df_combined.csv')
+df_images = pd.read_csv('data\df_images.csv')
+df_masks = pd.read_csv('data\df_masks.csv')
+df_combined = pd.read_csv('data\df_combined.csv')
+df_metadata = pd.read_csv('data\df_metadata.csv')
 
 def show_exploration():
-    
-    # Set des onglets et de leur style
-    tab1, tab2 = st.tabs(["🗂️ Métadonnées", "🖼️ Images & masques"])
-
+    # Style des onglets
     st.markdown("""
-    <style>
-        .stTabs [data-baseweb = "tab-list"] {
-            gap: 5px;
-        }
-        .stTabs [data-baseweb = "tab"] {
-            height: 25px;
-            white-space: pre-wrap;
-            background-color: #626C66;
-            border-radius: 4px 4px 0px 0px;
-            border: 1px solid #fff;
-            gap: 5px;
-            padding-top: 10px;
-            padding-bottom: 10px;
-            padding-right: 5px;
-        }
-        .stTabs [aria-selected = "true"] {
-            background-color: #F4FFFD;
-            border : 1px solid #626C66;
-        }
-    </style>""", unsafe_allow_html = True)
+        <style>
+            .stTabs [data-baseweb="tab-list"] {
+                display: flex;
+                gap: 10px;
+            }
+
+            .stTabs [data-baseweb="tab"] {
+                padding: 10px 15px;
+                border: 1px solid transparent;
+                border-radius: 5px 5px 0 0;
+                background-color: transparent;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .stTabs [data-baseweb="tab"]:hover {
+                background-color: #8f8d9b;
+            }
+
+            .stTabs [aria-selected="true"] {
+                background-color:  #57546a;
+                border-color: #ccc;
+                border-bottom-color: transparent;
+            }
+        </style>""", unsafe_allow_html = True)
+
+    tab1, tab2 = st.tabs(["🗂️ Métadonnées", "🖼️ Images & masques"])
 
     ### Premier onglet
     with tab1:
         st.header("Exploration des métadonnées")
-        st.markdown("Nous avons à notre disposition un important jeu de données provenant de [Kaggle](https://www.kaggle.com/datasets/tawsifurrahman/covid19-radiography-database). Il s'agit de 21 165 images de radiographies pulmonaires labellisées dans leur nom, ainsi qu'autant de masques basiques associés aux images. De plus, quatre fichiers de métadonnées au format *.xlxs sont disponibles en accompagnement des quatre catégories.")
+        st.markdown('''
+        Nous avons à notre disposition un important jeu de données provenant de [Kaggle](https://www.kaggle.com/datasets/tawsifurrahman/covid19-radiography-database). 
+        Il s'agit de 21 165 images de radiographies pulmonaires labellisées dans leur nom, ainsi qu'autant de masques basiques associés aux images. De plus, quatre fichiers de métadonnées au format *.xlxs sont disponibles en accompagnement des quatre catégories.
+
+        Au regard du peu d'informations présents dans les métadonnées, nous avons cherché à créer un nouveau tableau plus complet, nous permettant d'appréhender plus efficacement le jeu de données. Cette démarche nous a permis de détecter de nombreuses erreurs.
+                    ''')
         
-        st.dataframe(df_images.head())
+        col1, col2 = st.columns([1, 1])
 
-        ## Valeurs uniques
-        unique_classes = df_images['LABEL'].unique()
-        unique_classes = ", ".join(map(str, unique_classes))
-        unique_sources = df_images['SOURCE'].dropna().unique()
-        unique_sources = ", ".join(map(str, unique_sources))
-        unique_format = df_images["FORMAT"].unique()
-        unique_format = ", ".join(map(str, unique_format))    
-        unique_resolution = df_images["SIZE"].unique()
-        unique_resolution = ", ".join(map(str, unique_resolution))
-        unique_channel = df_images["CHANNELS"].unique()
-        unique_channel = ", ".join(map(str, unique_channel))
+        with col1:
+            st.subheader("Métadonnées fournies")
+            st.dataframe(df_metadata.head())
 
-        data = [
-            ("Liste des résolutions", unique_resolution),
-            ("Liste des formats", unique_format),
-            ("Liste des classes", unique_classes),
-            ("Liste des sources", unique_sources),
-            ("Nombre de canaux", unique_channel),
-            ("Nombre d'images", len(df_images))
-        ]
+            ## Valeurs uniques
+            unique_format = df_metadata["FORMAT"].unique()
+            unique_format = ", ".join(map(str, unique_format))    
+            unique_resolution = df_metadata["SIZE"].unique()
+            unique_resolution = ", ".join(map(str, unique_resolution))
 
-        # Créer le DataFrame à partir de la liste de tuples
-        df = pd.DataFrame(data, columns = ["Titre", "Variable"])
+            data = [
+                ("Liste des résolutions", unique_resolution),
+                ("Liste des formats", unique_format),
+                ("Nombre d'images", len(df_metadata))
+            ]
 
-        # Convertir le dataframe en HTML avec les styles CSS
-        html_table = df.to_html(index = False, header = False, justify = 'center', classes = 'styled-table', border = 0)
+            # Créer le DataFrame à partir de la liste de tuples
+            df2 = pd.DataFrame(data, columns = ["Titre", "Variable"])
 
-        # Afficher le HTML dans Streamlit avec la largeur calculée
-        st.markdown(f"<div style='border: 1px solid white; border-radius: 5px; padding: 10px; background-color: #343434; line-height: 1; width: 616px; margin: 0 auto;'>{html_table}</div>", unsafe_allow_html=True)
-        st.header("", divider = 'gray') 
+            # Convertir le dataframe en HTML avec les styles CSS
+            html_table2 = df2.to_html(index = False, header = False, justify = 'center', classes = 'styled-table', border = 0)
+
+            # Afficher le HTML dans Streamlit avec la largeur calculée
+            st.markdown(f"<div style='border: 1px solid white; border-radius: 5px; padding: 10px; background-color: #343434; line-height: 1; width: 270px; margin: 0 auto;'>{html_table2}</div>", unsafe_allow_html=True)            
+
+        with col2:
+            st.subheader("Métadonnées réelles")
+            st.dataframe(df_images.head())
+
+            ## Valeurs uniques
+            unique_classes = df_images['LABEL'].unique()
+            unique_classes = ", ".join(map(str, unique_classes))
+            unique_sources = df_images['SOURCE'].dropna().unique()
+            unique_sources = ", ".join(map(str, unique_sources))
+            unique_format = df_images["FORMAT"].unique()
+            unique_format = ", ".join(map(str, unique_format))    
+            unique_resolution = df_images["SIZE"].unique()
+            unique_resolution = ", ".join(map(str, unique_resolution))
+            unique_channel = df_images["CHANNELS"].unique()
+            unique_channel = ", ".join(map(str, unique_channel))
+
+            data = [
+                ("Liste des résolutions", unique_resolution),
+                ("Liste des formats", unique_format),
+                ("Liste des classes", unique_classes),
+                ("Liste des sources", unique_sources),
+                ("Nombre de canaux", unique_channel),
+                ("Nombre d'images", len(df_images))
+            ]
+
+            # Créer le DataFrame à partir de la liste de tuples
+            df = pd.DataFrame(data, columns = ["Titre", "Variable"])
+
+            # Convertir le dataframe en HTML avec les styles CSS
+            html_table = df.to_html(index = False, header = False, justify = 'center', classes = 'styled-table', border = 0)
+
+            # Afficher le HTML dans Streamlit avec la largeur calculée
+            st.markdown(f"<div style='border: 1px solid white; border-radius: 5px; padding: 10px; background-color: #343434; line-height: 1; width: 616px; margin: 0 auto;'>{html_table}</div>", unsafe_allow_html=True)
+
 
         # ==================================================================================================
         # ==================================================================================================
 
-        ## Countplot
-        # Preprocess des données pour affichage
-        total_images = df_images.groupby('LABEL').size().reset_index(name='Total Images')
-        max_values = df_images.groupby('LABEL')['LABEL'].count().reset_index(name='Max Images')
-        df_merged = pd.merge(total_images, max_values, on='LABEL')
-        df_sorted = df_merged.sort_values('Total Images', ascending = False)
+        st.header("Analyse du nombre d'images")
 
-        palette = {'Normal': '#A1C9F4', 'Lung_Opacity': '#8DE5A1', 'COVID': '#FFB482', 'Viral Pneumonia': '#D0BBFF'}
+        col1, col2 = st.columns([0.4, 0.6])
+        
+        with col1:
+            ## Countplot
+            # Preprocess des données pour affichage
+            total_images = df_images.groupby('LABEL').size().reset_index(name='Total Images')
+            max_values = df_images.groupby('LABEL')['LABEL'].count().reset_index(name='Max Images')
+            df_merged = pd.merge(total_images, max_values, on='LABEL')
+            df_sorted = df_merged.sort_values('Total Images', ascending = False)
 
-        # Création du graphique Plotly avec affichage des valeurs maximales uniquement au survol
-        fig = px.bar(df_sorted, x = 'LABEL', y = 'Total Images', color = 'LABEL',
-                    color_discrete_map = palette,
-                    title = "Distribution du nombre d'images par LABEL",
-                    labels = {'LABEL': 'Label', 'Total Images': 'Nombre d\'images', 'Max Images': 'Nombre maximal d\'images'},
-                    hover_data = {'LABEL': False, 'Max Images': True, 'Total Images': False}
-                    )
+            palette = {'Normal': '#A1C9F4', 'Lung_Opacity': '#8DE5A1', 'COVID': '#FFB482', 'Viral Pneumonia': '#D0BBFF'}
 
-        fig.update_layout(
-            xaxis_title = 'Label',
-            yaxis_title = "Nombre d'images",
-            showlegend = True,
-            bargap = 0.2,  # Espace entre les barres
-            width = 600,
-            height = 500
-        )
+            # Création du graphique Plotly avec affichage des valeurs maximales uniquement au survol
+            fig = px.bar(df_sorted, x = 'LABEL', y = 'Total Images', color = 'LABEL',
+                        color_discrete_map = palette,
+                        title = "Distribution du nombre d'images par LABEL",
+                        labels = {'LABEL': 'Label', 'Total Images': 'Nombre d\'images', 'Max Images': 'Nombre maximal d\'images'},
+                        hover_data = {'LABEL': False, 'Max Images': True, 'Total Images': False}
+                        )
 
-        st.plotly_chart(fig)
-        st.markdown("Les classes sont particulièrement déséquilibrées, il est cependant intéressant de constater que la classe minoritaire contient tout de même 1345 images.")
+            fig.update_layout(
+                xaxis_title = 'Label',
+                yaxis_title = "Nombre d'images",
+                showlegend = True,
+                bargap = 0.2,  # Espace entre les barres
+                width = 600,
+                height = 500
+            )
+
+            st.plotly_chart(fig)
+
+        with col2:
+            st.markdown("Les classes sont particulièrement déséquilibrées, il est cependant intéressant de constater que la classe minoritaire contient tout de même 1345 images.")
+        
         st.header("", divider = 'gray')
         
         # ==================================================================================================
         # ==================================================================================================
 
-        ## Pieplot
-        # Supposons que df_images est votre DataFrame et 'SOURCE' est la colonne d'intérêt
-        source_counts = df_images['SOURCE'].value_counts()
+        col1, col2 = st.columns([0.5, 0.5])
 
-        # Création d'un graphique pie avec Plotly
-        fig = px.pie(
-            values = source_counts.values, 
-            names = source_counts.index, 
-            title = 'Répartition des sources des images',
-            hole = 0.5, 
-            color_discrete_sequence = px.colors.qualitative.Pastel
-        )
+        with col1:
+            ## Pieplot
+            # Supposons que df_images est votre DataFrame et 'SOURCE' est la colonne d'intérêt
+            source_counts = df_images['SOURCE'].value_counts()
 
-        fig.update_traces(
-            textinfo = 'label+percent',
-            marker = dict(line = dict(color = 'black', width = 1)),
-        )
+            # Création d'un graphique pie avec Plotly
+            fig = px.pie(
+                values = source_counts.values, 
+                names = source_counts.index, 
+                title = 'Répartition des sources des images',
+                hole = 0.5, 
+                color_discrete_sequence = px.colors.qualitative.Pastel
+            )
 
-        fig.update_layout(
-            showlegend = True,
-            width = 700,
-            height = 700
-        )
+            fig.update_traces(
+                textinfo = 'label+percent',
+                marker = dict(line = dict(color = 'black', width = 1)),
+            )
 
-        # Affichage du graphique avec Streamlit
-        st.plotly_chart(fig)
+            fig.update_layout(
+                showlegend = True,
+                width = 700,
+                height = 700
+            )
+
+            # Affichage du graphique avec Streamlit
+            st.plotly_chart(fig)
+
+        with col2:
+            ## Barplot
+            df_count = df_images.groupby(['SOURCE', 'LABEL']).size().reset_index(name='NOMBRE_IMAGES')
+
+            # Créer un graphique empilé avec Plotly
+            fig2 = px.bar(df_count, x='SOURCE', y='NOMBRE_IMAGES', color='LABEL', barmode='stack',
+                        title='Nombre d\'images par label et par source',
+                        labels={'NOMBRE_IMAGES': 'Nombre d\'images', 'LABEL': 'Label', 'SOURCE': 'Source'}, 
+                        color_discrete_sequence = px.colors.qualitative.Pastel)
+            
+            fig2.update_traces(
+                marker = dict(line = dict(color = 'black', width = 1)),
+            )
+
+            fig2.update_layout(
+                showlegend = True,
+                width = 700,
+                height = 700
+            )
+            # Affichage du graphique avec Streamlit
+            st.plotly_chart(fig2)
+
 
     ### Deuxième onglet
     with tab2:
@@ -168,7 +241,11 @@ def show_exploration():
                             image = Image.open(f)
                             cols[i].image(image, caption=f"{sous_dossier}", use_column_width = "auto", width = 299)
             st.success('Images affichées avec succès !', icon = "✅")
-            st.markdown("Nous pouvons remarquer que les images sont toutes en nuances de gris, malgré leur nombre de canaux quelques fois différent. De plus, toutes les radiographies semblent avoir été prises selon une méthode standard, mettant bien les poumons au centre de l'image. Quelques variations peuvent cependant apparaître (bras vers le haut, artefacts visuels, annotations, etc.)")
+            st.markdown('''
+                        Nous pouvons remarquer que les images sont toutes en nuances de gris, malgré leur nombre de canaux quelques fois différent. 
+                        De plus, toutes les radiographies semblent avoir été prises selon une méthode standard, mettant bien les poumons au centre de l'image. 
+                        Quelques variations peuvent cependant apparaître (bras vers le haut, artefacts visuels, annotations, etc.)
+                        ''')
         st.header("", divider = 'gray')
         
         # ==================================================================================================
@@ -216,7 +293,14 @@ def show_exploration():
             st.plotly_chart(fig)
 
         with col2:
-            st.markdown("L'application des masques réduit considérablement l'intensité lumineuse moyenne des images. Ce comportement est tout à fait normal car les masques noircient les parties non pertinentes et font ainsi tendre la moyenne des pixels vers 0.")
+            st.markdown('''
+                        L'application des masques réduit considérablement l'intensité lumineuse moyenne des images. 
+                        Ce comportement est tout à fait normal car les masques noircient les parties non pertinentes et font ainsi tendre la moyenne des pixels vers 0.
+
+                        Ainsi, les valeurs restantes sont les valeurs ayant de la pertinence dans ce que nous cherchons à faire observer au modèle. 
+                        Mais ceci peut aussi entrainer une diminution de la variabilité des images, pouvant entrainer plus de difficultés à la généralisation.
+                        De plus, ceci génère une contrainte supplémentaire lors du déploiement du modèle, nécessitant d'appliquer un masque spécifique aux nouvelles données avant introduction dans le modèle.
+                        ''')
         
         st.header("", divider = 'gray')
         
@@ -264,10 +348,15 @@ def show_exploration():
         # ==================================================================================================
         # ==================================================================================================
 
-        col1, col2 = st.columns([0.3, 0.6])
+        col1, col2 = st.columns([0.4, 0.6])
 
         with col1:
-            st.markdown("test de texte")
+            st.markdown('''
+                        La surface utile des masques est l'ensemble des pixels apportant de l'information dans l'analyse de notre problématique. 
+                        En pratique, il s'agit de l'ensemble des pixels définissant les poumons sur la radiographie.
+                        Des éléments artefactuels peu commun sur la radiographies hors des poumons peut générer de la variabilité que le modèle va prendre en compte, le poussant alors à "observer" des zones qui ne sont pas pertinentes pour notre problématique.
+                        C'est là que l'application des masques pour limiter la "vision" du modèle aux poumons peut s'avérer utile.
+                        ''')
 
         with col2:
             ## Surface utile

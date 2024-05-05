@@ -1,6 +1,0 @@
-VGG19,Précision ,Recall ,F1 Score 
-COVID,0.92,0.95,0.93
-Lung_Opacity,0.84,0.91,0.88
-Normal,0.91,0.81,0.88
-Viral_Pneumonia,0.97,0.97,0.97
-Précision Globale,0.91,,

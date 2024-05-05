@@ -1,40 +1,49 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import pandas as pd
 import pickle
+import numpy as np
 import plotly.graph_objects as go
-from graph_model_F import plot_auc, plot_f1_score, plot_loss_curve , plot_precision_curve
+import plotly.figure_factory as ff
+from custom_functions import plot_auc, plot_f1_score, plot_loss_curve , plot_precision_curve
+from custom_functions import plot_CM_ConvnextBase, plot_CM_ConvnextTiny, plot_CM_DenseNet201, plot_CM_DenseNetFT, plot_CM_EfficientNet_B4, plot_CM_ENetB4, plot_CM_ResNet121, plot_CM_ResNetFT, plot_CM_ResNetV2,plot_CM_VGG16,plot_CM_VGG16_FT,plot_CM_VGG19
 
-with open(r"C:\Users\Gamy\Documents\GitHub\FEV24_BDS_Radios_Pulmonaire\models\history_DenseNet201_finetuned.pkl", "rb") as file1:
+with open("models\history_DenseNet201.pkl", "rb") as file1:
     history_densenet = pickle.load(file1)
-with open(r"C:\Users\Gamy\Documents\GitHub\FEV24_BDS_Radios_Pulmonaire\models\history_VGG16.pkl", "rb") as file2:
+with open("models\history_VGG16.pkl", "rb") as file2:
     history_vgg = pickle.load(file2)
 
 def show_fine_tuning():
-
-    tab0, tab1, tab2, tab3, tab4 = st.tabs(["📚 Rappels DL & CNN", "🛠️ Preprocessing", "📈 Modélisation", "💻 Modèles testés", "🤖 Modèle final"])
-    
+    # Style des onglets
     st.markdown("""
-    <style>
-        .stTabs [data-baseweb = "tab-list"] {
-            gap: 5px;
-        }
-        .stTabs [data-baseweb = "tab"] {
-            height: 25px;
-            white-space: pre-wrap;
-            background-color: #626C66;
-            border-radius: 4px 4px 0px 0px;
-            border: 1px solid #fff;
-            gap: 5px;
-            padding-top: 10px;
-            padding-bottom: 10px;
-            padding-right: 5px;
-        }
-        .stTabs [aria-selected = "true"] {
-            background-color: #F4FFFD;
-            border : 1px solid #626C66;
-        }
-    </style>""", unsafe_allow_html = True)
-    
+        <style>
+            .stTabs [data-baseweb="tab-list"] {
+                display: flex;
+                gap: 10px;
+            }
+
+            .stTabs [data-baseweb="tab"] {
+                padding: 10px 15px;
+                border: 1px solid transparent;
+                border-radius: 5px 5px 0 0;
+                background-color: transparent;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .stTabs [data-baseweb="tab"]:hover {
+                background-color: #8f8d9b;
+            }
+
+            .stTabs [aria-selected="true"] {
+                background-color:  #57546a;
+                border-color: #ccc;
+                border-bottom-color: transparent;
+            }
+        </style>""", unsafe_allow_html = True)
+
+    tab0, tab1, tab2, tab3, tab4, tab5 = st.tabs(["📚 Rappels Deep Learning", "🛠️ Preprocessing", "📈 Modélisation", "🧰 Suivi des métriques", "💻 Modèles testés", "🤖 Modèles finaux"])
+        
     #---------------------------------------------------------------------
     # Les deux fonctions suivantes pour centrer les images dans les pages
     # fonction qui coverti une image en foramt bytes
@@ -64,14 +73,14 @@ def show_fine_tuning():
         
         #st.image(r".\images\neurone-biologique-et-artificiel.png", caption='Un neurone biologique vs un Perceptron (neurone artificiel)')
         # chemin du fichier de l'image
-        image_path = r".\images\neurone-biologique-et-artificiel.png"
+        image_path = r".\images\ann_bnn_no_bg.png"
         # afficher l'image centrée avec markdown
         st.markdown("<p style='text-align: center; color: grey;'>" + img_to_html(image_path) + "</p>", unsafe_allow_html=True)
         # La légende de l'image
         st.markdown("<div style='text-align: center; color: grey;'>Un neurone biologique vs un Perceptron (neurone artificiel)</div>", unsafe_allow_html=True)
         
         # Séparateur ligne
-        st.write("___")
+        st.header("", divider = "gray")
         
         st.write("#### 2. Convolutional Neural Network (CNN)")
         
@@ -87,17 +96,18 @@ def show_fine_tuning():
         ''')
         
         #st.image(r".\images\layers_CNN.png", caption="Architecture d'un réseau de neurones convolutifs CNN")
-        image_path = r".\images\layers_CNN.png"
+        image_path = r".\images\layers_cnn_no_bg.png"
         # afficher l'image centrée avec markdown
         st.markdown("<p style='text-align: center; color: grey;'>" + img_to_html(image_path) + "</p>", unsafe_allow_html=True)
         # La légende de l'image
         st.markdown("<div style='text-align: center; color: grey;'>Architecture d'un réseau de neurones convolutifs CNN</div>", unsafe_allow_html=True)
         
         # Démonstration avec l'application de reconnaissance de chiffres 
-        st.button("Reset", type="primary")
-        if st.button('DEMO'):
-                st.write("##### Démonstration en direct : fonctionnement d'un CNN")
-                st.link_button("DEMO Chiffre écrit à la main", "https://adamharley.com/nn_vis/cnn/3d.html")
+        st.write("##### Démonstration en direct : fonctionnement d'un CNN")
+        st.link_button("DEMO Chiffre écrit à la main", "https://adamharley.com/nn_vis/cnn/3d.html")
+        
+        # Intégration de la page html de démonstation CNN dans la page streamlit
+        components.iframe("https://adamharley.com/nn_vis/cnn/3d.html", height=700)
 
 
     ### Premier onglet
@@ -114,7 +124,7 @@ def show_fine_tuning():
         ''')
         
         # Séparateur ligne
-        st.write("___")
+        st.header("", divider = "gray")
         
         st.write("#### 2. Fonctions de pre-processing")
         # Style CSS pour listes à puces internes
@@ -186,7 +196,7 @@ def show_fine_tuning():
                     ''')
         
         # Séparateur ligne
-        st.write("___")
+        st.header("", divider = "gray")
         
         st.write("#### 3. Encodage des labels")
         
@@ -219,14 +229,11 @@ def show_fine_tuning():
                     ''')        
         #st.image(r".\images\LeNet5_architecture.png", caption="Architecture du LeNet5")
         # chemin du fichier de l'image
-        image_path = r".\images\LeNet5_architecture.png"
+        image_path = r".\images\LeNet5_architecture_no_bg.png"
         # afficher l'image centrée avec markdown
         st.markdown("<p style='text-align: center; color: grey;'>" + img_to_html(image_path) + "</p>", unsafe_allow_html=True)
         # La légende de l'image
         st.markdown("<div style='text-align: center; color: grey;'>Architecture du LeNet5</div>", unsafe_allow_html=True)
-        
-        
-        
         
         st.write("##### Etudes paramétriques: nombre d'images et nombre d'Epochs")
         
@@ -235,12 +242,52 @@ def show_fine_tuning():
         
         col1, col2 = st.columns([1, 1])
         
-        with col1:
-            st.image(r".\images\LeNet-5_benchmark_n_img.png", caption="Courbe d’apprentissage du modèle LeNet-5 en fonction du nombre d’images utilisées")
-            
-            
-        with col2:
-            st.image(r".\images\LeNet-5_benchmark_epochs.png", caption="Courbe d’apprentissage du modèle LeNet-5 en fonction du nombre d’époques")            
+        df = pd.read_csv(r"data\Lenet_nb_image.csv")
+        df2 = pd.read_csv(r"data\Lenet_nb_epoque.csv") 
+
+
+        col1, col2 = st.columns(2)
+
+        with col1 :
+
+            fig = go.Figure()
+
+            fig.add_trace(go.Scatter(x=df['nombre_images'], y=df['Precision max'], mode='lines+markers', name='Precision max', line=dict(color='lightblue')))
+            fig.add_trace(go.Scatter(x=df['nombre_images'], y=df['Precision max validation'], mode='lines+markers', name='Precision max validation', line=dict(color='salmon')))
+
+            fig.add_vline(x=1325, line=dict(color='red', width=1, dash='dash'))
+            fig.update_layout(title="Courbe d’apprentissage du modèle LeNet-5 en fonction du nombre d’images utilisées",
+                            xaxis_title='Nombre d\'images',
+                            yaxis_title='Précision max',
+                            template='plotly_white',
+                            paper_bgcolor='rgba(0,0,0,0)',
+                            plot_bgcolor='rgba(0,0,0,0)',
+                            legend=dict(font=dict(color='white')),
+                            xaxis=dict(tickfont=dict(color='white')),
+                            yaxis=dict(tickfont=dict(color='white')),
+                            title_font=dict(color='white'))
+            st.plotly_chart(fig)
+
+        with col2: 
+
+            fig2 = go.Figure()
+
+            fig2.add_trace(go.Scatter(x=df2['Nombre epoque'], y=df2['Precision max'], mode='lines+markers', name='Precision max', line=dict(color='lightblue')))
+            fig2.add_trace(go.Scatter(x=df2['Nombre epoque'], y=df2['Precision max validation'], mode='lines+markers', name='Precision max validation', line=dict(color='salmon')))
+
+            fig2.update_layout(title="Courbe d’apprentissage du modèle LeNet-5 en fonction du nombre d’époques",
+                            xaxis_title='Nombre d\'époque',
+                            yaxis_title='Précision max',
+                            template='plotly_white',
+                            paper_bgcolor='rgba(0,0,0,0)',
+                            plot_bgcolor='rgba(0,0,0,0)',
+                            legend=dict(font=dict(color='white')),
+                            xaxis=dict(tickfont=dict(color='white')),
+                            yaxis=dict(tickfont=dict(color='white')),
+                            title_font=dict(color='white'))
+
+            st.plotly_chart(fig2)
+         
                
         st.markdown('''
         Par la suite, nous entrainons les modèles avec les paramètres suivants : 
@@ -250,7 +297,7 @@ def show_fine_tuning():
         ''')
     
         # Séparateur ligne
-        st.write("___")
+        st.header("", divider = "gray")
               
         # 2. Keras Tuner
         st.write("#### 2. Keras Tuner")  
@@ -303,18 +350,30 @@ def show_fine_tuning():
             """
         with st.expander("Voir le code de KerasTuner"):
             st.code(code, language = 'python')
-            
-
+    
         # séparer les sections avec une ligne
-        st.write("___")
+        st.header("", divider = "gray")
         
-        # 3. Transfert Learning
-        st.write("#### 3. Transfert Learning")  
+        # 3. Transfer Learning
+        st.write("#### 3. Transfer Learning")  
         st.markdown('''
-        Le transfert learning est une technique en apprentissage automatique où un modèle pré-entraîné sur une tâche est réutilisé comme point de départ pour résoudre une autre tâche similaire. Plutôt que de construire un nouveau modèle à partir de zéro, on exploite les connaissances et les représentations déjà apprises (les poids), ce qui permet d'améliorer l'apprentissage sur des ensembles de données plus petits ou différents. 
+        Le transfer learning est une technique en apprentissage automatique où un modèle pré-entraîné sur une tâche est réutilisé comme point de départ pour résoudre une autre tâche similaire. 
+        Plutôt que de construire un nouveau modèle à partir de zéro, on exploite les connaissances et les représentations déjà apprises (les poids), ce qui permet d'améliorer l'apprentissage sur des ensembles de données plus petits ou différents. 
         ''')       
         
-        # Tableau qui résume les modèles choisis pour le Transfet Learning
+        # Critères de pré-sélectionnement des modèles testés
+        st.write("###### - Critères de présélection")
+        data = {'Critères': ['Taille du modèle (MB)', 'Accuracy (Top1/Top5)', 'Nombre de paramètres (millions)', 'Temps de calcul CPU/GPU (ms)']}
+        
+        df = pd.DataFrame(data)
+        # Convertir le dataframe en HTML avec les styles CSS
+        html_table = df.to_html(index=False, justify='center', classes='styled-table')
+        # Afficher le HTML dans Streamlit avec la largeur calculée
+        st.markdown(f"<div style='border: 1px solid white; border-radius: 5px; padding: 10px; background-color: #343434; line-height: 1; width: 350px; margin: 0 auto;'>{html_table}</div>", unsafe_allow_html=True)           
+        
+        
+        # Tableau qui résume les modèles choisis pour le Transfer Learning
+        st.write("###### - Modèles présélectionnés")
         data = {
             'Modèle': ['InceptionResNet', 'ResNet', 'DenseNet', 'VGG', 'ConvNext', 'EfficientNet'],
             'Versions': ['InceptionResNetV2', 'ResNet121V2', 'DenseNet201', 'VGG16, VGG19', 'ConvNextBase, ConvNextTiny', 'EfficientNetB0, EfficientNetB1, EfficientNetB2, EfficientNetB3, EfficientNetB4, EfficientNetB5, EfficientNetB6']
@@ -329,7 +388,51 @@ def show_fine_tuning():
 
     ### Troisième onglet
     with tab3:
-            Slider = st.select_slider(" ", options = ["Transfer learning" , "Fine Tuning"])
+        st.header("Suivi des métriques")
+        st.markdown('''
+        Dans le domaine du deep learning appliqué à la santé, l'évaluation des modèles joue un rôle crucial pour mesurer leur performance et leur pertinence clinique. 
+        Les métriques utilisées fournissent des informations essentielles sur la capacité du modèle à généraliser à de nouvelles données et à fournir des prédictions précises et fiables.
+                    ''')
+    
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.subheader("Précision (accuracy)")
+            st.markdown('''
+            La précision est l'une des métriques les plus fondamentales en deep learning. 
+            Elle mesure la proportion de prédictions correctes parmi toutes les prédictions effectuées par le modèle. 
+            Bien qu'elle soit souvent utilisée comme mesure globale de performance, elle peut être trompeuse dans le contexte médical lorsque les classes sont déséquilibrées. 
+            Par exemple, dans le diagnostic médical, où les cas positifs sont rares par rapport aux cas négatifs, une haute précision peut être obtenue simplement en prédisant toujours la classe majoritaire (négative), ce qui masquerait l'incapacité du modèle à détecter les cas positifs.
+                        ''')
+
+            st.subheader("F1 Score")
+            st.markdown('''
+            Le score F1 est une mesure qui combine à la fois la précision et la sensibilité en un seul nombre. 
+            Il est particulièrement utile lorsque le déséquilibre entre les classes est important, car il prend en compte à la fois les faux positifs et les faux négatifs. 
+            Dans le domaine médical, où les conséquences des erreurs de prédiction peuvent être graves, le score F1 est souvent préféré pour évaluer la performance des modèles de diagnostic et de détection des maladies.
+                        ''')
+        
+        with col2:
+            st.subheader("Sensibilité et Spécificité")
+            st.markdown('''
+            La sensibilité (recall) mesure la capacité du modèle à identifier correctement les cas positifs parmi tous les cas réellement positifs. 
+            Elle est particulièrement importante dans les applications médicales où la détection précoce des anomalies ou des maladies est cruciale. 
+            D'un autre côté, la spécificité mesure la capacité du modèle à identifier correctement les cas négatifs parmi tous les cas réellement négatifs. 
+            Ensemble, la sensibilité et la spécificité fournissent une image plus complète de la capacité du modèle à discriminer entre les classes et à minimiser les faux positifs et les faux négatifs.
+                        ''')
+
+            st.subheader("Courbe ROC et aire sous la courbe (RAC-AUC)")
+            st.markdown('''
+            La courbe ROC (Receiver Operating Characteristic) est un graphique qui représente la performance d'un modèle de classification à différents seuils de classification. 
+            Elle compare la sensibilité (taux de vrai positif) au taux de faux positif (1 - spécificité) à différents seuils de décision. 
+            L'aire sous la courbe (AUC) ROC quantifie la capacité du modèle à discriminer entre les classes et fournit une mesure agrégée de sa performance. 
+            Dans le contexte médical, une AUC élevée indique une capacité de diagnostic élevée et une meilleure capacité à séparer les classes.
+                        ''')
+
+    with tab4:
+            col00, col01, col02 = st.columns([0.4, 0.2,0.4])
+            with col01 : 
+                Slider = st.select_slider(" ", options = ["Transfer learning" , "Fine Tuning"])
 
             categorie = {"Transfer learning" :["Modèles testés","InceptionResNetV2","ResNet121V2","DenseNet201","VGG16", "VGG19","ConvNextTiny","ConvNextBase","EfficientNet B4"],
                         "Fine Tuning" : ["EfficientNet", "ResNet", "VGG16_ft" ,"DenseNet"]}
@@ -337,34 +440,122 @@ def show_fine_tuning():
             Choice_cr = st.selectbox("Navigation",
                                     options = categorie[Slider])
             
-            csv_path_cr = {"Modèles testés" :r"df_file\df test model.csv",
-                        "InceptionResNetV2" :r"df_file\df InceptionRes.csv",
-                        "ResNet121V2" : r"df_file\df Res.csv",
-                        "DenseNet201": r"df_file\df densenet.csv",
-                        "VGG16" : r"df_file\df VGG16.csv", 
-                        "VGG19" : r"df_file\df VGG19.csv",
-                        "ConvNextTiny" : r"df_file\df Convtiny.csv",
-                        "ConvNextBase" : r"df_file\df Convbase.csv",
-                        "EfficientNet B4" :r"df_file\df efficient.csv",
-                        "EfficientNet" :r"df_file\df efficientnet finetuned.csv",
-                        "ResNet" :r"df_file\df resnet finetuned.csv",
-                        "VGG16_ft" :r"df_file\df VGG16_finetuned.csv",
-                        "DenseNet" :r"df_file\df densenet_finetuned.csv"}
+            csv_path_cr = {"Modèles testés" :r"data\df test model.csv",
+                        "InceptionResNetV2" :r"data\df InceptionRes.csv",
+                        "ResNet121V2" : r"data\df Res.csv",
+                        "DenseNet201": r"data\df densenet.csv",
+                        "VGG16" : r"data\df VGG16.csv", 
+                        "VGG19" : r"data\df VGG19.csv",
+                        "ConvNextTiny" : r"data\df Convtiny.csv",
+                        "ConvNextBase" : r"data\df Convbase.csv",
+                        "EfficientNet B4" :r"data\df efficient.csv",
+                        "EfficientNet" :r"data\df efficientnet finetuned.csv",
+                        "ResNet" :r"data\df resnet finetuned.csv",
+                        "VGG16_ft" :r"data\df VGG16_finetuned.csv",
+                        "DenseNet" :r"data\df densenet_finetuned.csv"}
             
-            comm_dico = {"Modèles testés" :""" Voici un récapitulatif des modèles que nous avons testé dans le cadre du transfer learning. """,
-                        "InceptionResNetV2" :""" Le modèle a une capacité variable à distinguer les différentes classes de radiographies. La classe Viral Pneumonia présente d'excellents scores de précision, de rappel et de F1, indiquant une identification quasi parfaite, tandis que la classe Normal a montré des difficultés plus marquées, avec les scores les plus bas pour ces mêmes métriques. Le score F1, qui équilibre la précision et le rappel, suggère que le modèle est plus apte à identifier correctement les classes COVID et Viral Pneumonia, __mais qu'il pourrait bénéficier d'un rééquilibrage ou d'un ajustement dans la classification des classes Lung_Opacity et Normal.__ """ ,
-                        "ResNet121V2" :""" Le modèle a une certaine tendance à confondre la classe COVID avec les classes Lung_Opacity et Normal, comme en témoignent les 11 erreurs dans chaque cas. Néanmoins, la classe Viral Pneumonia est interprétée avec une grande précision, indiquant que les caractéristiques distinctives de cette classe sont bien capturées par le modèle. Les métriques par classe montrent que la classe 3 se distingue avec une précision et un rappel exceptionnels proches de 0.98, menant à un score F1 similaire, qui est une mesure robuste de la précision globale. Les classes COVID, Lung_Opacity, et Normal présentent des scores F1 légèrement plus bas, mais toujours respectables, bien que ces classes pourraient bénéficier d'un réajustement du modèle pour améliorer la distinction entre elles. __La précision globale du modèle à 0.88 est solide, mais l'objectif serait de viser une amélioration dans la classification fine entre les classes similaires.__""" ,
-                        "DenseNet201":"""  Les erreurs de classification les plus courantes semblent se produire entre les classes Lung_Opacity et Normal, sous-entendant des similarités entre les caractéristiques des radiographies que le modèle confond certainement. Selon le tableau de métriques, le modèle a une excellente précision pour la classe COVID et des scores exceptionnels de rappel et de F1 pour la classe Viral Pneumonia, indiquant une classification presque parfaite pour ces catégories. Les classes Lung_Opacity et Normal ont des scores F1 légèrement inférieurs mais comparables. __Tout ceci indique une bonne performance de classification qui reste uniforme entre ces catégories.__""" ,
-                        "VGG16" : """ Le modèle parvient à très bien classer les radiographies des classes Viral (Viral pneumonia) et COVID. Également, même si les résultats restent bons, le modèle commet plus d'erreurs de classification entre les catégories Normal et Lung (Lung_opacity). __Sans ajustement particulier, ce modèle semble déjà prometteur quant à ses capacités à classifier nos radiographies correctement.__""", 
-                        "VGG19" : """ Les résultats obtenus semblent également très bons et superposables  à ceux que nous avons obtenus pour que pour VGG16. __Cependant ce modèle étant un peu plus profond, il demande des ressources computationnelles plus importantes sans que cela ne se répercute de façon évidente sur ses performances.__ """,
-                        "ConvNextTiny" : """ Avec ce modèle il apparaît que la classification est significativement meilleure pour la catégorie  Viral (Viral pneumonia) que pour les autres. Ceci donne un score global en deçà de ce que nous avons pu observer sur d’autres modèles dans les mêmes conditions de test. Les courbes d’apprentissage suggèrent que le modèle pourrait bénéficier d’un nombre d'époques supérieur pour continuer à s’améliorer. """,
-                        "ConvNextBase" : """ La classe Viral pneumonia reste toujours la mieux détectée, suivie de la classe COVID. Les résultats obtenus ici sont donc comparables à ceux obtenus avec le modèle ConvNeXtTiny. Encore une fois le modèle semble pouvoir bénéficier d’un allongement de la durée d'entraînement. Cependant il est à noter que ce modèle peut se montrer gourmand en termes de ressource computationnelle, __une époque de ConvNeXtBase pouvant prendre entre deux et trois fois plus de temps que le modèle ConvNeXtTiny sans montrer une différence flagrante de performance.__""",
-                        "EfficientNet B4" :"""La précision du modèle chute à 0.88 sur l’ensemble test. La détection de la classe COVID n'est pas au niveau de ce que l’on espérait avec une précision de 0.91. __Globalement, le modèle avec ce paramétrage donne de bons résultats.__ Dans la section suivante, nous allons essayer un ajustement plus fin pour avoir de  meilleures performances avec ce modèle. """,
-                        "EfficientNet" :""" __Avec une précision globale de 0.94, c’est le meilleur modèle que nous avons eu pour cette partie concernant la famille de modèles EfficientNet.__ De plus, le modèle semble bien plus performant concernant la classe qui nous intéresse ici (classe COVID), avec une reconnaissance des radiographies COVID à 0.98 avec précision. Pour la suite de nos travaux, le meilleur modèle sera adopté et utilisé pour l’interprétabilité et la suite de cette étude.""",
-                        "ResNet" :""" Bien que performant, le modèle tend à être freiné dans ses performances par la classe Lung_Opacity, dans laquelle il classe des poumons sains et vice-versa. Quelques poumons sains sont aussi incorrectement classés en Viral Pneumonia. __Ce modèle est donc performant, et supprimer la classe Lung_Opacity bénéficierait certainement beaucoup au InceptionResNetV2.__""",
-                        "VGG16_ft" :""" Le modèle a donc été entraîné avec ces paramètres ce qui nous permet d’améliorer encore l’efficacité du modèle par rapport à ce que nous avions obtenu sans finetuning. Les classes les mieux prédites sont COVID et Viral (Viral pneumonia), suivies par les classes Lung Opacity et Normal. De façon intéressante , toutes nos métriques sont au-dessus de 90% et suite à l'entraînement du modèle avec les meilleurs paramètres nous obtenons une accuracy globale de 95%. __Ce modèle semble donc capable de fournir des résultats plus qu’acceptables tout en ayant un coût computationnel très contenu.__""",
-                        "DenseNet" :""" Le rapport de classification montre des valeurs élevées pour la précision, le rappel et le F1 Score pour chaque classe ce qui indique que le modèle est particulièrement performant dans la distinction entre les différentes conditions. A noter cependant qu’il performe tout particulièrement dans la distinction de la classe COVID et de la classe Viral Pneumonia mais est un peu moins efficace dans la détection des classes Normal et Lung_Opacity. Pour le COVID, le modèle a très bien performé, avec seulement 3 faux positifs et faux négatifs. Les résultats pour les autres conditions sont également bons, mais on note quelques erreurs, par exemple, 23 cas de Lung_Opacity ont été confondus avec la classe Normal. __Néanmoins, ces erreurs semblent être faibles en comparaison avec le nombre total de prédictions correctes.__"""}
+            comm_dico = {"Modèles testés" :"""
+                        <div>
+                        Voici un récapitulatif des modèles que nous avons testés dans le cadre du transfer learning.<br>
+                        Nous avons poursuivi ensuite le fine-tuning avec la répartition suivante.<br>
+                        <ul>
+                            <li>DenseNet : Alexandre</li>
+                            <li>ResNet : Camille</li>
+                            <li>VGG16 : Pierre-Jean</li>
+                            <li>EfficientNet : Chaouki</li>                         
+                        </ul>
+                        </div>""",
+                         
+                        "InceptionResNetV2" :""" 
+                        <ul>
+                            <li>Le modèle a une capacité variable à distinguer les différentes classes de radiographies. La classe Viral Pneumonia présente d'excellents scores de précision, de rappel et de F1, indiquant une identification quasi parfaite, tandis que la classe Normal a montré des difficultés plus marquées, avec les scores les plus bas pour ces mêmes métriques.</li>
+                            <li>Le score F1, qui équilibre la précision et le rappel, suggère que le modèle est plus apte à identifier correctement les classes COVID et Viral Pneumonia,</li>
+                            <li><strong>mais qu'il pourrait bénéficier d'un rééquilibrage ou d'un ajustement dans la classification des classes Lung_Opacity et Normal.</strong></li>
+                        </ul>""" ,
 
+                        "ResNet121V2" :""" 
+                        <ul>
+                        <li>Le modèle a une certaine tendance à confondre la classe COVID avec les classes Lung_Opacity et Normal, comme en témoignent les 11 erreurs dans chaque cas. Néanmoins, la classe Viral Pneumonia est interprétée avec une grande précision, indiquant que les caractéristiques distinctives de cette classe sont bien capturées par le modèle.</li>
+                        <li>Les métriques par classe montrent que la classe 3 se distingue avec une précision et un rappel exceptionnels proches de 0.98, menant à un score F1 similaire, qui est une mesure robuste de la précision globale. Les classes COVID, Lung_Opacity, et Normal présentent des scores F1 légèrement plus bas, mais toujours respectables, bien que ces classes pourraient bénéficier d'un réajustement du modèle pour améliorer la distinction entre elles.</li>
+                        <li><strong>La précision globale du modèle à 0.88 est solide, mais l'objectif serait de viser une amélioration dans la classification fine entre les classes similaires.</strong></li>
+                        </ul>""" ,
+
+                        "DenseNet201":"""  
+                        <ul>
+                            <li>Les erreurs de classification les plus courantes semblent se produire entre les classes Lung_Opacity et Normal, sous-entendant des similarités entre les caractéristiques des radiographies que le modèle confond certainement.</li>
+                            <li> Selon le tableau de métriques, le modèle a une excellente précision pour la classe COVID et des scores exceptionnels de rappel et de F1 pour la classe Viral Pneumonia, indiquant une classification presque parfaite pour ces catégories. Les classes Lung_Opacity et Normal ont des scores F1 légèrement inférieurs mais comparables.</li>
+                            <li><strong>Tout ceci indique une bonne performance de classification qui reste uniforme entre ces catégories.</strong></li>
+                        </ul>""" ,
+
+                        "VGG16" : """ 
+                        <ul>
+                        <li>Le modèle parvient à très bien classer les radiographies des classes Viral (Viral pneumonia) et COVID. Également, même si les résultats restent bons, le modèle commet plus d'erreurs de classification entre les catégories Normal et Lung (Lung_opacity).</li>
+                        <li><strong>Sans ajustement particulier, ce modèle semble déjà prometteur quant à ses capacités à classifier nos radiographies correctement.</strong></li>
+                        </ul>""", 
+
+                        "VGG19" : """ 
+                        <ul>
+                        <li>Les résultats obtenus semblent également très bons et superposables à ceux que nous avons obtenus pour que pour VGG16.</li>
+                        <li><strong>Cependant ce modèle étant un peu plus profond, il demande des ressources computationnelles plus importantes sans que cela ne se répercute de façon évidente sur ses performances.</strong></li>
+                        </ul> """,
+
+                        "ConvNextTiny" : """ 
+                        <ul>
+                        <li>Avec ce modèle, il apparaît que la classification est significativement meilleure pour la catégorie Viral (Viral pneumonia) que pour les autres. Ceci donne un score global en deçà de ce que nous avons pu observer sur d’autres modèles dans les mêmes conditions de test.</li>
+                        <li>Les courbes d’apprentissage suggèrent que le modèle pourrait bénéficier d’un nombre d'époques supérieur pour continuer à s’améliorer.</li>
+                        </ul> """,
+
+                        "ConvNextBase": """
+                        <ul>
+                        <li>La classe Viral pneumonia reste toujours la mieux détectée, suivie de la classe COVID. Les résultats obtenus ici sont donc comparables à ceux obtenus avec le modèle ConvNeXtTiny.</li>
+                        <li>Encore une fois le modèle semble pouvoir bénéficier d’un allongement de la durée d'entraînement. Cependant il est à noter que ce modèle peut se montrer gourmand en termes de ressource computationnelle, <strong>une époque de ConvNeXtBase pouvant prendre entre deux et trois fois plus de temps que le modèle ConvNeXtTiny sans montrer une différence flagrante de performance.</strong></li>
+                        </ul>
+                        """,
+                            "EfficientNet B4": """
+                        <ul>
+                        <li>La précision du modèle chute à 0.88 sur l’ensemble test. La détection de la classe COVID n'est pas au niveau de ce que l’on espérait avec une précision de 0.91.</li>
+                        <li><strong>Globalement, le modèle avec ce paramétrage donne de bons résultats.</strong> Dans la section suivante, nous allons essayer un ajustement plus fin pour avoir de meilleures performances avec ce modèle.</li>
+                        </ul>
+                        """,
+                            "EfficientNet": """
+                        <ul>
+                        <li><strong>Avec une précision globale de 0.94, c’est le meilleur modèle que nous avons eu pour cette partie concernant la famille de modèles EfficientNet.</strong> De plus, le modèle semble bien plus performant concernant la classe qui nous intéresse ici (classe COVID), avec une reconnaissance des radiographies COVID à 0.98 avec précision.</li>
+                        <li>Pour la suite de nos travaux, le meilleur modèle sera adopté et utilisé pour l’interprétabilité et la suite de cette étude.</li>
+                        </ul>
+                        """,
+                            "ResNet": """
+                        <ul>
+                        <li>Bien que performant, le modèle tend à être freiné dans ses performances par la classe Lung_Opacity, dans laquelle il classe des poumons sains et vice-versa. Quelques poumons sains sont aussi incorrectement classés en Viral Pneumonia.</li>
+                        <li><strong>Ce modèle est donc performant, et supprimer la classe Lung_Opacity bénéficierait certainement beaucoup au InceptionResNetV2.</strong></li>
+                        </ul>
+                        """,
+                            "VGG16_ft": """
+                        <ul>
+                        <li>Le modèle a donc été entraîné avec ces paramètres ce qui nous permet d’améliorer encore l’efficacité du modèle par rapport à ce que nous avions obtenu sans finetuning. Les classes les mieux prédites sont COVID et Viral (Viral pneumonia), suivies par les classes Lung Opacity et Normal.</li>
+                        <li>De façon intéressante , toutes nos métriques sont au-dessus de 90% et suite à l'entraînement du modèle avec les meilleurs paramètres nous obtenons une accuracy globale de 95%. <strong>Ce modèle semble donc capable de fournir des résultats plus qu’acceptables tout en ayant un coût computationnel très contenu.</strong></li>
+                        </ul>
+                        """,
+                            "DenseNet": """
+                        <ul>
+                        <li>Le rapport de classification montre des valeurs élevées pour la précision, le rappel et le F1 Score pour chaque classe ce qui indique que le modèle est particulièrement performant dans la distinction entre les différentes conditions.</li>
+                        <li>A noter cependant qu’il performe tout particulièrement dans la distinction de la classe COVID et de la classe Viral Pneumonia mais est un peu moins efficace dans la détection des classes Normal et Lung_Opacity. Pour le COVID, le modèle a très bien performé, avec seulement 3 faux positifs et faux négatifs. Les résultats pour les autres conditions sont également bons, mais on note quelques erreurs, par exemple, 23 cas de Lung_Opacity ont été confondus avec la classe Normal. <strong>Néanmoins, ces erreurs semblent être faibles en comparaison avec le nombre total de prédictions correctes.</strong></li>
+                        </ul>
+                        """
+            }
+
+            CM_dico =  {"Modèles testés" :"",
+                        "InceptionResNetV2" :plot_CM_ResNetV2,
+                        "ResNet121V2" : plot_CM_ResNet121,
+                        "DenseNet201": plot_CM_DenseNet201,
+                        "VGG16" : plot_CM_VGG16, 
+                        "VGG19" : plot_CM_VGG19,
+                        "ConvNextTiny" : plot_CM_ConvnextTiny,
+                        "ConvNextBase" : plot_CM_ConvnextBase,
+                        "EfficientNet B4" :plot_CM_EfficientNet_B4,
+                        "EfficientNet" :plot_CM_ENetB4,
+                        "ResNet" :plot_CM_ResNetFT,
+                        "VGG16_ft" :plot_CM_VGG16_FT,
+                        "DenseNet" :plot_CM_DenseNetFT}
 
             df = pd.read_csv(csv_path_cr[Choice_cr])
             df= df.fillna("")
@@ -393,23 +584,34 @@ def show_fine_tuning():
 
             col1, col2 = st.columns(2)
 
-            with col1 :
-
+            with col1:
                 st.markdown(css_style, unsafe_allow_html=True)
                 st.markdown(styled_html_table, unsafe_allow_html=True)
+                cola ,colb, colc = st.columns([0.2,0.6,0.2])
+                with colb:
+                    if Choice_cr != "Modèles testés":
+                        CM_dico[Choice_cr]()
+                    
             
-            with col2 :
-                 
-                st.markdown(comm_dico[Choice_cr])
+            with col2:
+                css_style_text = """
+                <style>
+                .centered-text {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                    margin-top: -35%; /* Ajuster la position verticale */
+                }
+                </style>
+                """
+                st.markdown(css_style_text, unsafe_allow_html=True)
+                st.markdown(f"<div class='centered-text'>{comm_dico[Choice_cr]}</div>", unsafe_allow_html=True)
 
 
-    ### Quatrième onglet
-    with tab4:
+    ### Cinquième onglet
+    with tab5:
 
-        model_f = st.selectbox ('Meilleurs modèles', options = ["VGG16" , "DenseNet"] ) 
-
-        path_pickle = {"VGG16" : r"pickle_file\model_historyVGG16BP_test.pkl",
-                    "DenseNet" : r"pickle_file\history_DenseNet201_finetuned_0_95_20epochs.pkl"}
         
         best_hp = {"VGG16" : """ 
                    - Dernière couche dense : 1024 neurones
@@ -420,18 +622,21 @@ def show_fine_tuning():
                     - Dropout : 0.4,
                     - Learning rate : 10e-4 """}
         
-        with open(path_pickle[model_f], 'rb') as fichier:
-        # Charger les données à partir du fichier
-            history = pickle.load(fichier)
+
         
-    Col1 , Col2 = st.columns(2)
+        Col1 , Col2 = st.columns(2)
 
-    with Col1:
-        plot_loss_curve(history)
-        plot_auc(history)
-    
-    with Col2:
-        plot_precision_curve(history)
-        plot_f1_score(history)
-
-    st.markdown(best_hp[model_f])
+        with Col1:
+            st.header("VGG16 métriques")
+            plot_precision_curve(history_vgg)
+            plot_loss_curve(history_vgg)
+            plot_auc(history_vgg)
+            plot_f1_score(history_vgg)
+            st.markdown(best_hp['VGG16'])
+        with Col2:
+            st.header("DenseNet métriques")
+            plot_precision_curve(history_densenet)
+            plot_loss_curve(history_densenet)
+            plot_auc(history_densenet)
+            plot_f1_score(history_densenet)
+            st.markdown(best_hp["DenseNet"])

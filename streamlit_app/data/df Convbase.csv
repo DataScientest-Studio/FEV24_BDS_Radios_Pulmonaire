@@ -1,0 +1,6 @@
+ConvNextBase,Précision ,Recall ,F1 Score 
+COVID,0.94,0.81,0.87
+Lung_Opacity,0.86,0.91,0.88
+Normal,0.8,0.9,0.84
+Viral_Pneumonia,0.97,0.94,0.94
+Précision Globale,0.89,,
