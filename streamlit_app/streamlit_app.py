@@ -68,10 +68,10 @@ with col1:
     show_profile(name = "Pierre-Jean CORNEJO", github_url = "https://github.com/PJCornejo", linkedin_url = "http://www.linkedin.com/in/pjCornejo/")
 
 with col2:
-    logo_dst = Image.open('images/logo_dst.jpg')
+    logo_dst = Image.open('images/logo_dst_bw.jpg')
     st.image(logo_dst, width = 200, use_column_width = False)
 
 with col3:
-    logo_plm = Image.open('images/logo_esl_plm.jpg')
+    logo_plm = Image.open('images/logo_esl_plm_bw.jpg')
     st.image(logo_plm, width = 200, use_column_width = False)
 
