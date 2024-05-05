@@ -105,6 +105,9 @@ def show_fine_tuning():
         # Démonstration avec l'application de reconnaissance de chiffres 
         st.write("##### Démonstration en direct : fonctionnement d'un CNN")
         st.link_button("DEMO Chiffre écrit à la main", "https://adamharley.com/nn_vis/cnn/3d.html")
+        
+        # Intégration de la page html de démonstation CNN dans la page streamlit
+        components.iframe("https://adamharley.com/nn_vis/cnn/3d.html", height=700)
 
 
     ### Premier onglet
@@ -358,7 +361,19 @@ def show_fine_tuning():
         Plutôt que de construire un nouveau modèle à partir de zéro, on exploite les connaissances et les représentations déjà apprises (les poids), ce qui permet d'améliorer l'apprentissage sur des ensembles de données plus petits ou différents. 
         ''')       
         
+        # Critères de pré-sélectionnement des modèles testés
+        st.write("###### - Critères de présélection")
+        data = {'Critères': ['Taille du modèle (MB)', 'Accuracy (Top1/Top5)', 'Nombre de paramètres (millions)', 'Temps de calcul CPU/GPU (ms)']}
+        
+        df = pd.DataFrame(data)
+        # Convertir le dataframe en HTML avec les styles CSS
+        html_table = df.to_html(index=False, justify='center', classes='styled-table')
+        # Afficher le HTML dans Streamlit avec la largeur calculée
+        st.markdown(f"<div style='border: 1px solid white; border-radius: 5px; padding: 10px; background-color: #343434; line-height: 1; width: 350px; margin: 0 auto;'>{html_table}</div>", unsafe_allow_html=True)           
+        
+        
         # Tableau qui résume les modèles choisis pour le Transfer Learning
+        st.write("###### - Modèles présélectionnés")
         data = {
             'Modèle': ['InceptionResNet', 'ResNet', 'DenseNet', 'VGG', 'ConvNext', 'EfficientNet'],
             'Versions': ['InceptionResNetV2', 'ResNet121V2', 'DenseNet201', 'VGG16, VGG19', 'ConvNextBase, ConvNextTiny', 'EfficientNetB0, EfficientNetB1, EfficientNetB2, EfficientNetB3, EfficientNetB4, EfficientNetB5, EfficientNetB6']
