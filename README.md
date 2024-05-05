@@ -2,7 +2,7 @@
 
 ## Présentation
 
-Ce répertoire contient le code de notre projet de classification de radiographies pulmonaires développé pendant notre [formation de Data Scientist](https://datascientest.com/en/data-scientist-course) avec [DataScientest](https://datascientest.com/).
+Ce répertoire contient le code de notre projet de classification de radiographies pulmonaires développé pendant notre [formation de Data Scientist](https://datascientest.com/en/data-scientist-course) avec [DataScientest](https://datascientest.com/) sous `Python 3.11.9`.
 
 L’objectif principal de ce projet est de développer un système d’analyse automatisée de radiographies pulmonaires pour la détection efficace du COVID-19 sur moins de deux mois en parallèle de notre formation. 
 En utilisant les techniques de Deep Learning, nous cherchons à créer un modèle de classification capable de distinguer avec précision les radiographies de patients atteints de COVID-19 de celles présentant d’autres affections pulmonaires ou étant saines. Les objectifs spécifiques incluent l’acquisition et la préparation d’un ensemble de données diversifié et annoté, la conception et l'entraînement d’un modèle de Deep Learning robuste, ainsi que l’évaluation rigoureuse de ses performances en termes de sensibilité, de spécificité et de précision.
@@ -26,6 +26,7 @@ L’étape de finetuning a été caractérisée par le dégèlement de couches e
 ## Organisation du répertoire
 
 Ce répertoire suit une hiérarchie classique et facile à explorer.
+Les modèles étant trop volumineux pour ce repo GitHub, ils sont disponibles sur ([HuggingFace](https://huggingface.co/spaces/a-langlais/streamlit_chest_radiography_DL/tree/main/models)).
 
 ```
 FEV24_BDS_Radios_Pulmonaire/
@@ -34,7 +35,7 @@ FEV24_BDS_Radios_Pulmonaire/
 │
 ├── docs/                   # Documentation du projet (bibliographie)
 │
-├── models/                 # Modèles finaux entraînés, leurs poids et historique d'entraînement
+├── models/                 # Historiques d'entrainement des deux modèles finaux
 │
 ├── notebooks/              # Jupyter notebooks
 │
@@ -50,7 +51,6 @@ FEV24_BDS_Radios_Pulmonaire/
 │
 ├── streamlit_app/          # Dossier de l'application streamlit
 │
-├── app.py                  # Lanceur du streamlit
 ├── environment.yml         # Fichier pour recréer l'environnement (conda)
 ├── requirements.txt        # Dépendances Python (pip)
 │
@@ -90,7 +90,7 @@ Dnas la partie "Utilisation du modèle", il est possible d'utiliser l'applicatio
 Pour lancer l'application streamlit :
 
 ```shell
-conda create --name chest_radiography_streamlit python=3.11
+conda create --name chest_radiography_streamlit python=3.11.9
 conda activate chest_radiography_streamlit
 pip install -r streamlit_requirements.txt
 streamlit run app.py
